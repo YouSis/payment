@@ -1,5 +1,7 @@
 package com.wfj.pay.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -8,9 +10,14 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class TestController {
-
+    @Autowired
+    private StringRedisTemplate redisTemplate;
     @RequestMapping("/test")
     public String test() {
-        return "hello world";
+        redisTemplate.opsForValue().set("my_key","oh my god");
+       String  value =  redisTemplate.opsForValue().get("my_key");
+       return value;
     }
+
+
 }

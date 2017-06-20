@@ -41,9 +41,9 @@ public class MyBatisConfig implements EnvironmentAware {
         dataSource.setUrl(env.getProperty("spring.master.datasource.url"));
         dataSource.setUsername(env.getProperty("spring.master.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.master.datasource.password"));
-        dataSource.setInitialSize(20);
-        dataSource.setMaxActive(200);
-        dataSource.setMinIdle(20);
+        dataSource.setInitialSize(5);
+        dataSource.setMaxActive(100);
+        dataSource.setMinIdle(5);
         dataSource.setMaxWait(60000);
         dataSource.setValidationQuery("SELECT 1 FROM DUAL");
         dataSource.setTimeBetweenEvictionRunsMillis(60000);
@@ -67,9 +67,9 @@ public class MyBatisConfig implements EnvironmentAware {
         dataSource.setUrl(env.getProperty("spring.slave.datasource.url"));
         dataSource.setUsername(env.getProperty("spring.slave.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.slave.datasource.password"));
-        dataSource.setInitialSize(20);
-        dataSource.setMaxActive(200);
-        dataSource.setMinIdle(20);
+        dataSource.setInitialSize(5);
+        dataSource.setMaxActive(100);
+        dataSource.setMinIdle(5);
         dataSource.setMaxWait(60000);
         dataSource.setValidationQuery("SELECT 1 FROM DUAL");
         dataSource.setTimeBetweenEvictionRunsMillis(60000);
