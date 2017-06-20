@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.MemberScoreMapper">
+    <resultMap id="memberScore" type="com.wfj.pay.po.MemberScore">
+        <id property="sid" column="sid" />
+        <result property="cid" column="cid" />
+        <result property="storeNo" column="store_no" />
+        <result property="score" column="score"/>
+        <result property="updateTime" column="update_time" />
+        <result property="updateChannel" column="update_channel" />
+        <result property="remark" column="remark" />
+    </resultMap>
+
+    <select id="select" resultMap="memberScore">
+        SELECT * FROM member_score s
+        WHERE s.store_no=#{storeNo,jdbcType=VARCHAR}
+        AND s.cid=#{cid,jdbcType=VARCHAR}
+    </select>
+
+    <update id="update" parameterType="MemberScore">
+        UPDATE member_score s
+        SET
+        s.score=#{score,jdbcType=NUMERIC},
+        s.update_time=#{updateTime,jdbcType=TIMESTAMP},
+        s.update_channel=#{updateChannel,jdbcType=VARCHAR}
+        WHERE
+        s.sid = #{sid}
+    </update>
+
+</mapper>

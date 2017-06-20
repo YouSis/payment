@@ -38,6 +38,10 @@ public class DataSourceAspect {
 		Method sourceMethod = point.getTarget().getClass().getMethod(proxyMethod.getName(),proxyMethod.getParameterTypes());
 		if(sourceMethod!=null && sourceMethod.isAnnotationPresent(DataSource.class)){
 			DataSource ds = sourceMethod.getAnnotation(DataSource.class);
+			String value =ds.value();
+			if(!HandleDataSource.isEnableDataSource(value)){
+				throw new RuntimeException("值为 ["+value+"] 的数据源没有被定义");
+			}
 			HandleDataSource.putDataSource(ds.value());
 			if(logger.isDebugEnabled()){
 				logger.debug("current methodName is "+sourceMethod.getName()+",Annotation DataSource value is "+ds.value()+",so switch to "+ds.value()+"DataSource");

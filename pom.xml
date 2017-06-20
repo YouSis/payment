@@ -6,6 +6,7 @@
     <artifactId>pay-parent</artifactId>
     <version>1.0-SNAPSHOT</version>
     <modules>
+        <module>pay-common</module>
         <module>pay-service-interface</module>
         <module>pay-service</module>
         <module>pay-offline-gateway</module>
@@ -29,6 +30,8 @@
         <dependency.oracle.jdbc.version>6</dependency.oracle.jdbc.version>
         <dependency.druid.version>1.0.31</dependency.druid.version>
         <dependency.aspectj.version>1.8.9</dependency.aspectj.version>
+        <dependency.fastjson.version>1.2.10</dependency.fastjson.version>
+        <dependency.commons-lang3.version>3.6</dependency.commons-lang3.version>
     </properties>
 
     <dependencyManagement>
@@ -57,6 +60,16 @@
                 <groupId>org.aspectj</groupId>
                 <artifactId>aspectjweaver</artifactId>
                 <version>${dependency.aspectj.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.alibaba</groupId>
+                <artifactId>fastjson</artifactId>
+                <version>${dependency.fastjson.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.commons</groupId>
+                <artifactId>commons-lang3</artifactId>
+                <version>${dependency.commons-lang3.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

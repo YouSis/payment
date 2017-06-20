@@ -12,5 +12,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.METHOD)
 public @interface DataSource {
 
-    String value() default "write";
+    String value() default "master";
 }

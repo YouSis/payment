@@ -40,7 +40,7 @@
 		<appender-ref ref="ASYNC" />
 	</logger>
 	<logger name="com.wfj" additivity="false">
-		<level value="INFO" />
+		<level value="DEBUG" />
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="ASYNC" />
 	</logger>
@@ -54,7 +54,7 @@
 		<appender-ref ref="STDOUT" />
 		<appender-ref ref="ASYNC" />
 	</logger>
-	<logger name="com.wfj.pay.pp.dao" level="DEBUG"/>
+	<logger name="com.wfj.pay.mapper" level="DEBUG"/>
 	<logger name="org.apache.ibatis" level="DEBUG" />
 	<logger name="org.mybatis" level="DEBUG" />
 	<logger name="java.sql.Connection" level="DEBUG" />    
