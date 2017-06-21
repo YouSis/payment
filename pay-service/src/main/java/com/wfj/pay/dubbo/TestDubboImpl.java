@@ -5,7 +5,7 @@ import com.alibaba.dubbo.config.annotation.Service;
 /**
  * Created by wjg on 2017/6/21.
  */
-@Service(version ="1.0.0",cluster = "failfast")
+@Service(version ="1.0.0",cluster = "failfast",timeout = 45000)
 public class TestDubboImpl implements ITestDubbo {
     @Override
     public String test(String str) {

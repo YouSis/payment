@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @RestController
 public class TestDubboController {
-    @Reference(version = "1.0.0",cluster = "failfast",timeout = 45000)
+    @Reference(version = "1.0.0",cluster = "failfast")
     private ITestDubbo testDubbo;
 
     @RequestMapping("test")
