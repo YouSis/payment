@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayChannelMapper">
+    <resultMap type="PayChannelPO" id="payChannelPO">
+        <id property="id" column="ID"/>
+        <result property="bpId" column="BP_ID"/>
+        <result property="dicCode" column="DIC_CODE"/>
+        <result property="payType" column="PAY_TYPE"/>
+        <result property="clientType" column="CLIENT_TYPE"/>
+        <result property="payService" column="PAY_SERVICE"/>
+        <result property="payPartner" column="PAY_PARTNER"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="PayChannelPO">
+        INSERT
+        INTO
+            PAY_CHANNEL (
+                ID,
+                BP_ID,
+                DIC_CODE,
+                PAY_TYPE,
+                CLIENT_TYPE,
+                PAY_SERVICE
+            )
+        VALUES (
+            #{id,
+        jdbcType=NUMERIC},
+            #{bpId,jdbcType=NUMERIC},
+            #{dicCode,jdbcType=VARCHAR},
+            #{payType,jdbcType=VARCHAR},
+            #{clientType,jdbcType=VARCHAR},
+            #{payService,jdbcType=NUMERIC}
+    </insert>
+    <select id="getPayChannelByBPDicCodePayService" resultMap="payChannelPO">
+        SELECT * FROM PAY_CHANNEL T
+        <where>
+            AND T.BP_ID = #{bpId}
+            AND T.DIC_CODE = #{dicCode}
+            AND T.CLIENT_TYPE=#{clientType}
+            AND T.PAY_SERVICE = #{payService}
+        </where>
+    </select>
+</mapper>

@@ -17,8 +17,8 @@ public interface PayChannelMapper {
 
     List<PayChannelPO> queryChannelList(Map<String, Object> paramMap);
 
-    PayChannelPO getPayChannelByBPDicCodePayService(@Param("bp_id") Long bpId,
-                                                    @Param("dic_code") String dicCode,
-                                                    @Param("client_type") String clientType,
-                                                    @Param("pay_service") Integer payService);
+    PayChannelPO getPayChannelByBPDicCodePayService(@Param("bpId") Long bpId,
+                                                    @Param("dicCode") String dicCode,
+                                                    @Param("clientType") String clientType,
+                                                    @Param("payService") Integer payService);
 }

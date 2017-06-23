@@ -26,37 +26,46 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
         long createOrderStart = System.currentTimeMillis();
         //1、校验
         RuleResultDTO validateResult = validate(orderRequestDTO);
-        if(!validateResult.isSuccess()){
+        if (!validateResult.isSuccess()) {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
             return responseDTO;
         }
+        //2、创建订单
+
+        //3、去支付
+
         long createOrderEnd = System.currentTimeMillis();
         return null;
     }
 
 
     private RuleResultDTO validate(OrderRequestDTO orderRequestDTO) {
-        RuleResultDTO result1 = createTradeRule.antiPhishingValidate(orderRequestDTO.getAntiPhishingKey());
-        if (!result1.isSuccess()) {
-            return result1;
+        RuleResultDTO result;
+        result = createTradeRule.antiPhishingValidate(orderRequestDTO.getAntiPhishingKey());
+        if (!result.isSuccess()) {
+            return result;
         }
-        RuleResultDTO result2 = createTradeRule.bpIdValidate(orderRequestDTO.getBpId());
-        if (!result2.isSuccess()) {
-            return result2;
+        result = createTradeRule.bpIdValidate(orderRequestDTO.getBpId());
+        if (!result.isSuccess()) {
+            return result;
         }
-        RuleResultDTO result3 = createTradeRule.repeatSubmitValidate(orderRequestDTO);
-        if (!result3.isSuccess()) {
-            return result3;
+        result = createTradeRule.repeatSubmitValidate(orderRequestDTO);
+        if (!result.isSuccess()) {
+            return result;
         }
-        RuleResultDTO result4 = createTradeRule.repeatCreateValidate(orderRequestDTO);
-        if (!result4.isSuccess()) {
-            return result4;
+        result = createTradeRule.repeatCreateValidate(orderRequestDTO);
+        if (!result.isSuccess()) {
+            return result;
         }
-        RuleResultDTO result5 = createTradeRule.md5Validate(orderRequestDTO);
-        if (!result5.isSuccess()) {
-            return result5;
+        result = createTradeRule.md5Validate(orderRequestDTO);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        result = createTradeRule.payChannelValidate(orderRequestDTO);
+        if (!result.isSuccess()) {
+            return result;
         }
         return new RuleResultDTO();
     }
