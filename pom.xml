@@ -33,6 +33,8 @@
         <dependency.fastjson.version>1.2.10</dependency.fastjson.version>
         <dependency.commons-lang3.version>3.6</dependency.commons-lang3.version>
         <dependency.springboot-dubbo.version>1.0.0</dependency.springboot-dubbo.version>
+        <dependency.hibernate-validator.version>5.4.1.Final</dependency.hibernate-validator.version>
+        <dependency.commons-codec.version>1.10</dependency.commons-codec.version>
     </properties>
 
     <dependencyManagement>
@@ -77,6 +79,16 @@
                 <artifactId>spring-boot-starter-dubbo</artifactId>
                 <version>${dependency.springboot-dubbo.version}</version>
             </dependency>
+            <dependency>
+                <groupId>org.hibernate</groupId>
+                <artifactId>hibernate-validator</artifactId>
+                <version>${dependency.hibernate-validator.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>commons-codec</groupId>
+                <artifactId>commons-codec</artifactId>
+                <version>${dependency.commons-codec.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -90,6 +102,10 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
+        </dependency>
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
         </dependency>
     </dependencies>
 

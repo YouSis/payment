@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wfj.pay.mapper.PaySequencesMapper">
+    <select id="selectOrderTradeNoNextVal" resultType="String">
+        select to_char(sysdate,'yyyyMM')||to_char(S_ORDER_TRADE_NO_ID.NEXTVAL,'FM0999999999999999') as orderTradeNo from dual
+    </select>
+</mapper>

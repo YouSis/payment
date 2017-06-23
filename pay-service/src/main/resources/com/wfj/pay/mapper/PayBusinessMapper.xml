@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayBusinessMapper">
+    <resultMap type="PayBusinessPO" id="payBusinessPO">
+        <id property="id" column="id" />
+        <result property="bpKey" column="bp_key" />
+        <result property="bpName" column="bp_name" />
+        <result property="description" column="description" />
+        <result property="lastDate" column="last_date" />
+        <result property="createDate" column="create_date" />
+        <result property="status" column="status" />
+        <result property="notifyUrl" column="notify_url" />
+        <result property="redirectUrl" column="redirect_url" />
+        <result property="mobileNotifyUrl" column="mobile_notify_url" />
+        <result property="mobileRedirectUrl" column="mobile_redirect_url" />
+    </resultMap>
+
+    <select id="selectByBpId" parameterType="long" resultMap="payBusinessPO">
+        SELECT * FROM  pay_business WHERE id=#{id}
+    </select>
+
+</mapper>

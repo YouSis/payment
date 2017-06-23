@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayTradeMapper">
+    <resultMap type="PayTradePO" id="payTradePO">
+        <id property="id" column="id" />
+        <result property="orderTradeNo" column="ORDER_TRADE_NO" />
+        <result property="payType" column="pay_Type" />
+        <result property="payBank" column="pay_Bank" />
+        <result property="goodsName" column="goods_Name" />
+        <result property="remark" column="remark" />
+        <result property="totalFee" column="TOTAL_FEE" />
+        <result property="status" column="status" />
+        <result property="createDate" column="create_Date" />
+        <result property="createDateFormat" column="create_Date_Format" />
+        <result property="bpId" column="bp_Id" />
+        <result property="bpOrderId" column="bp_Order_Id" />
+        <result property="showUrl" column="show_Url" />
+        <result property="content" column="content" />
+        <result property="notifyUrl" column="notify_Url" />
+        <result property="returnUrl" column="return_Url" />
+        <result property="account" column="account" />
+        <result property="payAccount" column="pay_Account" />
+        <result property="payDate" column="pay_Date" />
+        <result property="payDateFormat" column="pay_Date_Format" />
+        <result property="paySerialNumber" column="pay_Serial_Number" />
+        <result property="createDateMonth" column="create_Date_Month" />
+        <result property="createDateDay" column="create_Date_Day" />
+        <result property="createDateQuarter" column="create_Date_Quarter" />
+        <result property="payDateMonth" column="pay_Date_Month" />
+        <result property="payDateDay" column="pay_Date_Day" />
+        <result property="payDateQuarter" column="pay_Date_Quarter" />
+        <result property="unid" column="unid" />
+        <result property="username" column="username" />
+        <result property="notifyDate" column="notify_Date" />
+        <result property="notifyNum" column="notify_Num" />
+        <result property="notifyStatus" column="notify_Status" />
+        <result property="bpParams" column="bp_Params" />
+        <result property="notifyId" column="notify_id" />
+        <result property="orderUrl" column="order_url" />
+        <result property="initOrderTerminal" column="init_order_terminal" />
+        <result property="finalPayTerminal" column="final_pay_terminal" />
+        <result property="payLimit" column="pay_limit" />
+        <result property="payIp" column="pay_ip" />
+        <result property="payUnid" column="pay_unid" />
+        <result property="payPartner" column="pay_partner" />
+        <result property="channelFeeCost" column="channel_fee_cost" />
+        <result property="payService" column="pay_service" />
+        <result property="needPayPrice" column="need_pay_price" />
+        <result property="bargainIncome" column="bargain_income" />
+        <result property="realCardPrice" column="real_card_price" />
+        <result property="realIncome" column="real_income" />
+        <result property="nickname" column="nickname" />
+        <result property="payNickname" column="pay_nickname" />
+        <result property="payCurrency" column="PAY_CURRENCY" />
+        <result property="merCode" column="mer_code"/>
+        <result property="goodsContent" column="GOODS_CONTENT" />
+        <result property="channelFeeCostDetail" column="CHANNEL_FEE_COST_DETAIL" />
+        <result property="platformFeeCost" column="PLATFORM_FEE_COST" />
+        <result property="platformFeeCostDetail" column="PLATFORM_FEE_COST_DETAIL" />
+        <result property="payMediumCode" column="PAY_MEDIUM_CODE"/>
+        <result property="transactionId" column="TRANSACTION_ID"/>
+        <result property="platformPayDate" column="PLATFORM_PAY_DATE"/>
+        <result property="platformPayFormat" column="PLATFORM_PAY_FORMAT"/>
+        <result property="couponFee" column="COUPON_FEE"/>
+    </resultMap>
+
+    <select id="selectByBpIdAndBpOrderId"  resultMap="payTradePO">
+        SELECT *
+        FROM  PAY_TRADE
+        <where>
+            BP_ORDER_ID =#{bpOrderId} AND BP_ID = #{bpId}
+        </where>
+    </select>
+
+</mapper>

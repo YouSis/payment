@@ -15,14 +15,14 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dependency.pay-common.version>1.0-SNAPSHOT</dependency.pay-common.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.wfj.pay</groupId>
+            <artifactId>pay-common</artifactId>
+            <version>${dependency.pay-common.version}</version>
         </dependency>
     </dependencies>
 </project>
