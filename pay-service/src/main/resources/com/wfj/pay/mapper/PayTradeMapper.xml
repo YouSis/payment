@@ -2,61 +2,61 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="com.wfj.pay.mapper.PayTradeMapper">
     <resultMap type="PayTradePO" id="payTradePO">
-        <id property="id" column="id" />
-        <result property="orderTradeNo" column="ORDER_TRADE_NO" />
-        <result property="payType" column="pay_Type" />
-        <result property="payBank" column="pay_Bank" />
-        <result property="goodsName" column="goods_Name" />
-        <result property="remark" column="remark" />
-        <result property="totalFee" column="TOTAL_FEE" />
-        <result property="status" column="status" />
-        <result property="createDate" column="create_Date" />
-        <result property="createDateFormat" column="create_Date_Format" />
-        <result property="bpId" column="bp_Id" />
-        <result property="bpOrderId" column="bp_Order_Id" />
-        <result property="showUrl" column="show_Url" />
-        <result property="content" column="content" />
-        <result property="notifyUrl" column="notify_Url" />
-        <result property="returnUrl" column="return_Url" />
-        <result property="account" column="account" />
-        <result property="payAccount" column="pay_Account" />
-        <result property="payDate" column="pay_Date" />
-        <result property="payDateFormat" column="pay_Date_Format" />
-        <result property="paySerialNumber" column="pay_Serial_Number" />
-        <result property="createDateMonth" column="create_Date_Month" />
-        <result property="createDateDay" column="create_Date_Day" />
-        <result property="createDateQuarter" column="create_Date_Quarter" />
-        <result property="payDateMonth" column="pay_Date_Month" />
-        <result property="payDateDay" column="pay_Date_Day" />
-        <result property="payDateQuarter" column="pay_Date_Quarter" />
-        <result property="unid" column="unid" />
-        <result property="username" column="username" />
-        <result property="notifyDate" column="notify_Date" />
-        <result property="notifyNum" column="notify_Num" />
-        <result property="notifyStatus" column="notify_Status" />
-        <result property="bpParams" column="bp_Params" />
-        <result property="notifyId" column="notify_id" />
-        <result property="orderUrl" column="order_url" />
-        <result property="initOrderTerminal" column="init_order_terminal" />
-        <result property="finalPayTerminal" column="final_pay_terminal" />
-        <result property="payLimit" column="pay_limit" />
-        <result property="payIp" column="pay_ip" />
-        <result property="payUnid" column="pay_unid" />
-        <result property="payPartner" column="pay_partner" />
-        <result property="channelFeeCost" column="channel_fee_cost" />
-        <result property="payService" column="pay_service" />
-        <result property="needPayPrice" column="need_pay_price" />
-        <result property="bargainIncome" column="bargain_income" />
-        <result property="realCardPrice" column="real_card_price" />
-        <result property="realIncome" column="real_income" />
-        <result property="nickname" column="nickname" />
-        <result property="payNickname" column="pay_nickname" />
-        <result property="payCurrency" column="PAY_CURRENCY" />
+        <id property="id" column="id"/>
+        <result property="orderTradeNo" column="ORDER_TRADE_NO"/>
+        <result property="payType" column="pay_Type"/>
+        <result property="payBank" column="pay_Bank"/>
+        <result property="goodsName" column="goods_Name"/>
+        <result property="remark" column="remark"/>
+        <result property="totalFee" column="TOTAL_FEE"/>
+        <result property="status" column="status"/>
+        <result property="createDate" column="create_Date"/>
+        <result property="createDateFormat" column="create_Date_Format"/>
+        <result property="bpId" column="bp_Id"/>
+        <result property="bpOrderId" column="bp_Order_Id"/>
+        <result property="showUrl" column="show_Url"/>
+        <result property="content" column="content"/>
+        <result property="notifyUrl" column="notify_Url"/>
+        <result property="returnUrl" column="return_Url"/>
+        <result property="account" column="account"/>
+        <result property="payAccount" column="pay_Account"/>
+        <result property="payDate" column="pay_Date"/>
+        <result property="payDateFormat" column="pay_Date_Format"/>
+        <result property="paySerialNumber" column="pay_Serial_Number"/>
+        <result property="createDateMonth" column="create_Date_Month"/>
+        <result property="createDateDay" column="create_Date_Day"/>
+        <result property="createDateQuarter" column="create_Date_Quarter"/>
+        <result property="payDateMonth" column="pay_Date_Month"/>
+        <result property="payDateDay" column="pay_Date_Day"/>
+        <result property="payDateQuarter" column="pay_Date_Quarter"/>
+        <result property="unid" column="unid"/>
+        <result property="username" column="username"/>
+        <result property="notifyDate" column="notify_Date"/>
+        <result property="notifyNum" column="notify_Num"/>
+        <result property="notifyStatus" column="notify_Status"/>
+        <result property="bpParams" column="bp_Params"/>
+        <result property="notifyId" column="notify_id"/>
+        <result property="orderUrl" column="order_url"/>
+        <result property="initOrderTerminal" column="init_order_terminal"/>
+        <result property="finalPayTerminal" column="final_pay_terminal"/>
+        <result property="payLimit" column="pay_limit"/>
+        <result property="payIp" column="pay_ip"/>
+        <result property="payUnid" column="pay_unid"/>
+        <result property="payPartner" column="pay_partner"/>
+        <result property="channelFeeCost" column="channel_fee_cost"/>
+        <result property="payService" column="pay_service"/>
+        <result property="needPayPrice" column="need_pay_price"/>
+        <result property="bargainIncome" column="bargain_income"/>
+        <result property="realCardPrice" column="real_card_price"/>
+        <result property="realIncome" column="real_income"/>
+        <result property="nickname" column="nickname"/>
+        <result property="payNickname" column="pay_nickname"/>
+        <result property="payCurrency" column="PAY_CURRENCY"/>
         <result property="merCode" column="mer_code"/>
-        <result property="goodsContent" column="GOODS_CONTENT" />
-        <result property="channelFeeCostDetail" column="CHANNEL_FEE_COST_DETAIL" />
-        <result property="platformFeeCost" column="PLATFORM_FEE_COST" />
-        <result property="platformFeeCostDetail" column="PLATFORM_FEE_COST_DETAIL" />
+        <result property="goodsContent" column="GOODS_CONTENT"/>
+        <result property="channelFeeCostDetail" column="CHANNEL_FEE_COST_DETAIL"/>
+        <result property="platformFeeCost" column="PLATFORM_FEE_COST"/>
+        <result property="platformFeeCostDetail" column="PLATFORM_FEE_COST_DETAIL"/>
         <result property="payMediumCode" column="PAY_MEDIUM_CODE"/>
         <result property="transactionId" column="TRANSACTION_ID"/>
         <result property="platformPayDate" column="PLATFORM_PAY_DATE"/>
@@ -64,12 +64,80 @@
         <result property="couponFee" column="COUPON_FEE"/>
     </resultMap>
 
-    <select id="selectByBpIdAndBpOrderId"  resultMap="payTradePO">
+    <select id="selectByBpIdAndBpOrderId" resultMap="payTradePO">
         SELECT *
-        FROM  PAY_TRADE
+        FROM PAY_TRADE
         <where>
             BP_ORDER_ID =#{bpOrderId} AND BP_ID = #{bpId}
         </where>
     </select>
 
+    <select id="selectByBpIdAndOrderTradeNo" resultMap="payTradePO">
+        SELECT *
+        FROM PAY_TRADE
+        <where>
+            ORDER_TRADE_NO =#{orderTradeNo} AND BP_ID = #{bpId}
+        </where>
+
+    </select>
+
+    <insert id="insert" parameterType="PayTradePO">
+        INSERT
+        INTO
+        PAY_TRADE (ID,
+        ORDER_TRADE_NO, PAY_TYPE, PAY_BANK, GOODS_NAME, REMARK,
+        TOTAL_FEE, STATUS, CREATE_DATE, CREATE_DATE_FORMAT, BP_ID,BP_ORDER_ID,
+        ORDER_URL, SHOW_URL, CONTENT, NOTIFY_URL, RETURN_URL,
+        PAY_DATE, PAY_DATE_FORMAT, PAY_SERIAL_NUMBER,
+        CREATE_DATE_MONTH, CREATE_DATE_DAY, CREATE_DATE_QUARTER,
+        PAY_DATE_MONTH, PAY_DATE_DAY,
+        PAY_DATE_QUARTER,
+        <if test="unid != null">
+            UNID,
+        </if>
+        USERNAME,NOTIFY_DATE,NOTIFY_NUM, NOTIFY_STATUS,
+        BP_PARAMS, NOTIFY_ID,
+        INIT_ORDER_TERMINAL,FINAL_PAY_TERMINAL,
+        PAY_LIMIT,PAY_IP,PAY_UNID,PAY_CURRENCY,MER_CODE,PAY_SERVICE,GOODS_CONTENT)
+        VALUES(S_PAY_TRADE.NEXTVAL,
+        #{orderTradeNo},#{payType,jdbcType=VARCHAR},#{payBank,jdbcType=VARCHAR},#{goodsName,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
+        #{totalFee},#{status},#{createDate},#{createDateFormat},#{bpId},#{bpOrderId},
+        #{orderUrl,jdbcType=VARCHAR},#{showUrl,jdbcType=VARCHAR},#{content,jdbcType=VARCHAR},#{notifyUrl,jdbcType=VARCHAR},#{returnUrl,jdbcType=VARCHAR},
+        #{payDate,jdbcType=NUMERIC},#{payDateFormat,jdbcType=DATE},#{paySerialNumber,jdbcType=VARCHAR},#{createDateMonth},#{createDateDay},#{createDateQuarter},
+        #{payDateMonth,jdbcType=NUMERIC},#{payDateDay,jdbcType=NUMERIC},#{payDateQuarter,jdbcType=NUMERIC},
+        <if test="unid != null">
+            #{unid},
+        </if>
+        #{username,jdbcType=VARCHAR},#{notifyDate,jdbcType=DATE},#{notifyNum},#{notifyStatus,jdbcType=VARCHAR},
+        #{bpParams,jdbcType=VARCHAR},#{notifyId,jdbcType=VARCHAR},
+        #{initOrderTerminal,jdbcType=VARCHAR},#{finalPayTerminal,jdbcType=VARCHAR},
+        #{payLimit,jdbcType=VARCHAR},#{payIp,jdbcType=VARCHAR},#{payUnid,jdbcType=VARCHAR},#{payCurrency,jdbcType=VARCHAR},
+        #{merCode,jdbcType=VARCHAR},#{payService,jdbcType=NUMERIC},#{goodsContent,jdbcType=VARCHAR})
+    </insert>
+
+
+    <update id="updateOrderAfterPaySuccess" parameterType="PayTradePO">
+        UPDATE
+        PAY_TRADE
+        <set>
+            STATUS =#{status},
+            PAY_DATE=#{payDate,jdbcType=BIGINT},
+            PAY_DATE_FORMAT=#{payDateFormat, jdbcType=DATE},
+            PAY_SERIAL_NUMBER= #{paySerialNumber, jdbcType=VARCHAR},
+            PAY_DATE_DAY=#{payDateDay},
+            PAY_DATE_MONTH=#{payDateMonth},
+            PAY_DATE_QUARTER=#{payDateQuarter,jdbcType=BIGINT},
+            COUPON_FEE=#{couponFee,jdbcType=DOUBLE}
+            <if test="platformPayDate != null &amp;&amp; platformPayDate !=''">
+                , PLATFORM_PAY_DATE=#{platformPayDate}
+            </if>
+            <if test="platformPayFormat != null &amp;&amp; platformPayFormat != ''">
+                ,PLATFORM_PAY_FORMAT=#{platformPayFormat}
+            </if>
+        </set>
+        <where>
+            ORDER_TRADE_NO =
+            #{orderTradeNo, jdbcType=VARCHAR}
+        </where>
+    </update>
 </mapper>

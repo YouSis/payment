@@ -42,6 +42,7 @@ public class OrderRequestDTO implements java.io.Serializable {
      * 业务平台ID.
      */
     @NotEmpty
+    @Length(min = 1, max = 10)
     private String bpId;
     /**
      * 业务平台订单流水号.
@@ -100,7 +101,9 @@ public class OrderRequestDTO implements java.io.Serializable {
      */
     @NotEmpty
     private String authCode;
-
+    /**
+     * 客户端请求IP
+     */
     private String payIp;
 
     public static long getSerialVersionUID() {

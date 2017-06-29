@@ -75,4 +75,16 @@ public class StringUtil {
         }
         return result.trim();
     }
+
+    /**
+     * 将DOUBLE格式化为两位小数的字符串
+     * @param value
+     * @return
+     */
+    public static String getFormatDouble(Double value) {
+        DecimalFormat format = new DecimalFormat("0.00");
+        String formatDouble = format.format(value);
+        return formatDouble;
+    }
+
 }

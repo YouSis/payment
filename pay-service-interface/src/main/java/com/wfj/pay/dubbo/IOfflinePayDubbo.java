@@ -1,5 +1,6 @@
 package com.wfj.pay.dubbo;
 
+import com.wfj.pay.dto.OrderQueryRequestDTO;
 import com.wfj.pay.dto.OrderRequestDTO;
 import com.wfj.pay.dto.OrderResponseDTO;
 
@@ -13,4 +14,7 @@ public interface IOfflinePayDubbo {
      * @return
      */
     OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO);
+
+
+    OrderResponseDTO queryOrder(OrderQueryRequestDTO orderQueryRequestDTO);
 }

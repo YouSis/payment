@@ -1,7 +1,9 @@
 package com.wfj.pay.cache;
 
 import com.wfj.pay.po.PayBusinessPO;
+import com.wfj.pay.po.PayPartnerAccountPO;
 import com.wfj.pay.service.IPayBusinessService;
+import com.wfj.pay.service.IPayPartnerAccountServive;
 import com.wfj.pay.spring.SpringContextAware;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
@@ -12,6 +14,7 @@ import org.springframework.data.redis.core.StringRedisTemplate;
 public class PayCacheHandle {
     public static final String PAY_BUSINESS_CACHE_KEY = "PAY_BUSINESS_%s";
     public static final String REPEAT_SUBMIT__CHECK_CACHE_KEY = "PAY_REPEAT_SUBMIT_CHECK_%s";
+    public static final String PAY_PARTNER_ACCOUNT_CACHE_KEY="PAY_PARTNER_%s";
     /**
      * 获取stringRedisTemplate
      * @return
@@ -46,5 +49,23 @@ public class PayCacheHandle {
             redisTemplate.opsForValue().set(String.format(PAY_BUSINESS_CACHE_KEY,bpId),businessPO);
         }
         return businessPO;
+    }
+
+    /**
+     * 获取缓存中的PayPartnerAccountPO，如果不存在则查询数据库，然后放入缓存
+     * @param id
+     * @return
+     */
+    public static PayPartnerAccountPO getPayPartnerAccout(Long id){
+        RedisTemplate<String,PayPartnerAccountPO> redisTemplate = getRedisTemplate();
+        PayPartnerAccountPO partnerAccountPO = redisTemplate.opsForValue().get(String.format(PAY_PARTNER_ACCOUNT_CACHE_KEY, id));
+        if(partnerAccountPO==null){
+            IPayPartnerAccountServive partnerAccountServive = SpringContextAware.getBeanByName("payPartnerServiceImpl");
+            partnerAccountPO = partnerAccountServive.findPayPartnerAccoutById(id);
+        }
+        if(partnerAccountPO!=null){
+            redisTemplate.opsForValue().set(String.format(PAY_PARTNER_ACCOUNT_CACHE_KEY,id),partnerAccountPO);
+        }
+        return partnerAccountPO;
     }
 }

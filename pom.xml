@@ -35,6 +35,7 @@
         <dependency.springboot-dubbo.version>1.0.0</dependency.springboot-dubbo.version>
         <dependency.hibernate-validator.version>5.4.1.Final</dependency.hibernate-validator.version>
         <dependency.commons-codec.version>1.10</dependency.commons-codec.version>
+        <dependency.httpclient.version>4.5.3</dependency.httpclient.version>
     </properties>
 
     <dependencyManagement>
@@ -88,6 +89,11 @@
                 <groupId>commons-codec</groupId>
                 <artifactId>commons-codec</artifactId>
                 <version>${dependency.commons-codec.version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.httpcomponents</groupId>
+                <artifactId>httpclient</artifactId>
+                <version>${dependency.httpclient.version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

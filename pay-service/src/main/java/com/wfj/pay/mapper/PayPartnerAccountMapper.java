@@ -1,6 +1,7 @@
 package com.wfj.pay.mapper;
 
 import com.wfj.pay.po.PayPartnerAccountPO;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -16,7 +17,5 @@ public interface PayPartnerAccountMapper {
 
     void update(PayPartnerAccountPO payPartnerAccountPO);
 
-    PayPartnerAccountPO selectById(Long id);
-
-    List<PayPartnerAccountPO> selectAllList(Map<String, Object> map);
+    PayPartnerAccountPO selectById(@Param("id") Long id);
 }

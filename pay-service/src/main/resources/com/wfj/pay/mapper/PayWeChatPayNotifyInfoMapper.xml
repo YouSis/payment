@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayPartnerAccountMapper">
+    <insert id="insert" parameterType="PayWeChatNotifyInfoPO">
+        INSERT
+        INTO
+        PAY_WECHATPAY_NOTIFY_INFO
+        VALUES(S_PAY_WECHATPAY_NOTIFY_INFO.NEXTVAL,
+        #{return_code,jdbcType=VARCHAR},#{return_msg,jdbcType=VARCHAR},
+        #{appid,jdbcType=VARCHAR},#{mch_id,jdbcType=VARCHAR},
+        #{device_info,jdbcType=VARCHAR},#{nonce_str,jdbcType=VARCHAR},
+        #{sign,jdbcType=VARCHAR},#{result_code,jdbcType=VARCHAR},
+        #{err_code,jdbcType=VARCHAR},#{err_code_des,jdbcType=VARCHAR},
+        #{openid,jdbcType=VARCHAR},#{trade_type,jdbcType=VARCHAR},
+        #{bank_type,jdbcType=VARCHAR},#{total_fee,jdbcType=NUMERIC},
+        #{fee_type,jdbcType=VARCHAR},#{cash_fee,jdbcType=NUMERIC},
+        #{cash_fee_type,jdbcType=VARCHAR},#{coupon_fee,jdbcType=NUMERIC},
+        #{coupon_count,jdbcType=NUMERIC},#{transaction_id,jdbcType=VARCHAR},
+        #{out_trade_no,jdbcType=VARCHAR},#{attach,jdbcType=VARCHAR},
+        #{time_end,jdbcType=VARCHAR})
+    </insert>
+</mapper>

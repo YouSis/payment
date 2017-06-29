@@ -1,5 +1,6 @@
 package com.wfj.pay.mapper;
 
+import com.wfj.pay.dto.PayTradeDTO;
 import com.wfj.pay.po.PayTradePO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -20,5 +21,9 @@ public interface PayTradeMapper {
 
     PayTradePO selectByBpIdAndBpOrderId(@Param("bpId") Long bpId, @Param("bpOrderId") String bpOrderId);
 
+    PayTradePO selectByBpIdAndOrderTradeNo(@Param("bpId")Long bpId,@Param("orderTradeNo") String orderTradeNo);
+
     int updateOrderPayType(Map<String, Object> para);
+
+    void updateOrderAfterPaySuccess(PayTradePO payTradePO);
 }

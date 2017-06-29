@@ -14,7 +14,4 @@ public interface PayLogMapper {
 
     void insert(PayLogPO payLogPO);
 
-    PayLogPO select(Map<String, Object> para);
-
-    List<PayLogPO> findByOrderIdOrderByCreateDate(String orderTradeNo);
 }
