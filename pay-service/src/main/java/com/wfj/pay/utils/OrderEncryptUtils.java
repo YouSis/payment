@@ -3,7 +3,9 @@ package com.wfj.pay.utils;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.dto.KeyValue;
+import com.wfj.pay.dto.OrderCloseRequestDTO;
 import com.wfj.pay.dto.OrderRequestDTO;
+import com.wfj.pay.dto.RefundOrderRequestDTO;
 import com.wfj.pay.po.PayBusinessPO;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +31,14 @@ public class OrderEncryptUtils {
             "bpOrderId", "goodsName", "totalFee", "content", "remark",
             "initOrderTerminal", "antiPhishingKey", "merCode", "goodsContent",
             "cashier", "authCode", "payType", "payService"};
-
+    /**
+     * 参与关闭订单的加密参数数组
+     */
+    public final static String[] CLOSE_ORDER_MD5_PARAMS ={"bpId","bpOrderId","orderTradeNo","antiPhishingKey"};
+    /**
+     * 参与创建爱你退款单的参数数组
+     */
+    public final static String[] CREATE_REFUND_ORDER_MD5_PARAMS={"bpId","bpOrderId","orderTradeNo","antiPhishingKey","bpRefundOrderId","payType","refundFee"};
     /**
      * 根据接口参数和业务平台秘钥获取加密参数
      *
@@ -82,9 +91,35 @@ public class OrderEncryptUtils {
      * @param orderRequestDTO
      * @return
      */
-    public static boolean checkSign(OrderRequestDTO orderRequestDTO){
+    public static boolean checkCreateOrderSign(OrderRequestDTO orderRequestDTO){
         Map<String, String> createTradeParamsMap = getCreateTradeParamsMap(orderRequestDTO);
        return  checkSign(createTradeParamsMap,Long.valueOf(orderRequestDTO.getBpId()));
+    }
+
+    /**
+     * 校验关闭订单签名是否正月
+     * @param orderCloseRequestDTO
+     * @return
+     */
+    public static boolean checkCloseOrderSign(OrderCloseRequestDTO orderCloseRequestDTO){
+        Map<String, Object> map = ObjectUtil.beanToMap(orderCloseRequestDTO);
+        Map<String, String> collectMap = Arrays.stream(CLOSE_ORDER_MD5_PARAMS).
+                map(s -> new KeyValue(s, StringUtil.getString(map.get(s))))
+                .collect(Collectors.toMap(KeyValue::getKey, KeyValue::getValue));
+        return checkSign(collectMap,Long.valueOf(orderCloseRequestDTO.getBpId()));
+    }
+
+    /**
+     * 校验创建退单签名是否正月
+     * @param refundOrderRequestDTO
+     * @return
+     */
+    public static boolean checkCreateRefundOrderSign(RefundOrderRequestDTO refundOrderRequestDTO){
+        Map<String, Object> map = ObjectUtil.beanToMap(refundOrderRequestDTO);
+        Map<String, String> collectMap = Arrays.stream(CREATE_REFUND_ORDER_MD5_PARAMS).
+                map(s -> new KeyValue(s, StringUtil.getString(map.get(s))))
+                .collect(Collectors.toMap(KeyValue::getKey, KeyValue::getValue));
+        return checkSign(collectMap,Long.valueOf(refundOrderRequestDTO.getBpId()));
     }
     /**
      * 判断加密信息是否正确

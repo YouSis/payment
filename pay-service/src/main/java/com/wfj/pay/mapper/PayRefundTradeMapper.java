@@ -18,7 +18,12 @@ public interface PayRefundTradeMapper {
 
     List<PayRefundTradePO> selectRefundTradeByOrderTradeNo(String orderTradeNo);
 
-    PayRefundTradePO getRefundOrderByBp(@Param("bpId") Long bpId,
+    PayRefundTradePO selectByBpIdAndBpRefundOrderId(@Param("bpId") Long bpId,
                                         @Param("bpRefundOrderId") String bpRefundOrderId);
 
+    PayRefundTradePO selectLastSuccessRefundTrade(String orderTradeNo);
+
+    Integer selectRefundTradeCount(@Param("orderTradeNo") String orderTradeNo);
+
+    PayRefundTradePO selectByRefundTradeNo(String refundTradeNo);
 }

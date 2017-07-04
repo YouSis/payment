@@ -27,6 +27,15 @@ public interface IPayTradeService {
     PayTradePO findByBpIdAndOrderTradeNo(Long bpId,String orderTradeNo);
 
     /**
+     * 如果orderTradeNo不为空用orderTradeNo查，否则用bpOrderId查
+     * @param bpId
+     * @param bpOrderId
+     * @param orderTradeNo
+     * @return
+     */
+    PayTradePO findByBpOrderIdOrOrderTradeNo(Long bpId,String bpOrderId,String orderTradeNo);
+
+    /**
      * 根据支付平台订单号查询订单信息
      * @param orderTradeNo
      * @return
@@ -48,8 +57,35 @@ public interface IPayTradeService {
 
     /**
      * 支付成功之后的实体类转换成OrderResponseDTO
-     * @param payTradePO
+     * @param orderTradeNo
      * @return
      */
-    OrderResponseDTO transfer(PayTradePO payTradePO);
+    OrderResponseDTO transfer(String orderTradeNo);
+
+    /**
+     * 关闭成功之后的处理，更新订单状态、记录日志
+     * @param orderTradeNo
+     */
+    void doAfterCloseSuccess(String orderTradeNo,String operateSource);
+
+    /**
+     * 去支付
+     * @param payTradeDTO
+     * @return
+     */
+    OrderResponseDTO pay(PayTradeDTO payTradeDTO);
+
+    /**
+     * 去查询
+     * @param tradePO
+     * @return
+     */
+    OrderResponseDTO query(PayTradePO tradePO);
+
+    /**
+     * 去关闭
+     * @param tradePO
+     * @return
+     */
+    OrderResponseDTO close(PayTradePO tradePO);
 }

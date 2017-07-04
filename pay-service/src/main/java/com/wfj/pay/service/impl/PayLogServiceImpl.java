@@ -1,8 +1,11 @@
 package com.wfj.pay.service.impl;
 
 import com.wfj.pay.annotation.DataSource;
+import com.wfj.pay.constant.PayLogConstant;
 import com.wfj.pay.mapper.PayLogMapper;
+import com.wfj.pay.mapper.PayRefundLogMapper;
 import com.wfj.pay.po.PayLogPO;
+import com.wfj.pay.po.PayRefundLogPO;
 import com.wfj.pay.service.IPayLogService;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -25,22 +28,14 @@ public class PayLogServiceImpl implements IPayLogService {
     private final static String closeToken = "}";
     @Autowired
     private PayLogMapper payLogMapper;
+    @Autowired
+    private PayRefundLogMapper refundLogMapper;
 
     @Override
     @DataSource("master")
     @Transactional
     public void saveLog(Map<String, Object> logMap, String logModel, String status) {
-        if (StringUtils.isEmpty(logModel)) {
-            throw new RuntimeException("日志模板key不能为空");
-        }
-        if (logMap == null || logMap.get("orderTradeNo") == null) {
-            throw new RuntimeException("orderTradeNo必须存在，否则日志无效");
-        }
-        String logContent = parse(logModel, new MapWraper<>(logMap));
-        if (logContent.length() > 900) {
-            logContent = logContent.substring(0, 900) + "...";
-        }
-
+        String logContent = process(logMap,logModel,status);
         PayLogPO payLogPO = new PayLogPO();
         payLogPO.setOrderTradeNo(logMap.get("orderTradeNo").toString());
         payLogPO.setOwnPlatform("wfjpay");
@@ -49,6 +44,20 @@ public class PayLogServiceImpl implements IPayLogService {
         payLogPO.setStatus(status);
 
         payLogMapper.insert(payLogPO);
+    }
+
+    @Override
+    @DataSource("master")
+    @Transactional
+    public void saveRefundLog(Map<String, Object> logMap, String modelKey, String status) {
+        String logContent = process(logMap,modelKey,status);
+        PayRefundLogPO refundLogPO = new PayRefundLogPO();
+        refundLogPO.setOrderTradeNo(logMap.get("orderTradeNo").toString());
+        refundLogPO.setRefundTradeNo(logMap.get("refundTradeNo").toString());
+        refundLogPO.setContent(logContent);
+        refundLogPO.setCreateDate(new Timestamp(System.currentTimeMillis()));
+        refundLogPO.setStatus(Long.valueOf(status));
+        refundLogMapper.insert(refundLogPO);
     }
 
     /**
@@ -112,5 +121,25 @@ public class PayLogServiceImpl implements IPayLogService {
             }
             return value.toString();
         }
+    }
+
+    private String process(Map<String, Object> logMap, String logModel, String status) {
+        if (StringUtils.isEmpty(logModel)) {
+            throw new RuntimeException("日志模板key不能为空");
+        }
+        if (logMap == null || logMap.get("orderTradeNo") == null) {
+            throw new RuntimeException("orderTradeNo必须存在，否则日志无效");
+        }
+        String logContent = parse(logModel, new MapWraper<>(logMap));
+
+        if (status.equals(PayLogConstant.FAIL_NAME)
+                && !ObjectUtils.isEmpty(logMap.get("errorMsg"))) {// 如果操作失败，将错误提示信息添加到logStatement前.
+            logContent = "错误提示：" + logMap.get("errorMsg").toString()
+                    + "\n\n处理信息：" + logContent;
+        }
+        if (logContent.length() > 900) {
+            logContent = logContent.substring(0, 900) + "...";
+        }
+        return logContent;
     }
 }

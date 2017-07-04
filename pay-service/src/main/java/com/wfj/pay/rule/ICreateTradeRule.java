@@ -6,7 +6,7 @@ import com.wfj.pay.dto.RuleResultDTO;
 /**
  * Created by wjg on 2017/6/23.
  */
-public interface ICreateTradeRule extends  IBaseRule{
+public interface ICreateTradeRule extends IBaseRule{
     /**
      * md5加密校验
      * @param orderRequestDTO

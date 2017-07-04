@@ -9,12 +9,12 @@ import java.util.Map;
  * @author admin
  * 
  */
-public final class PayOrderStatus {
+public final class PayTradeStatus {
 
 	/**
 	 * 私有构造.
 	 */
-	private PayOrderStatus() {
+	private PayTradeStatus() {
 
 	}
 
@@ -22,7 +22,6 @@ public final class PayOrderStatus {
 	 * 状态map.
 	 */
 	private static Map<Long, String> statusMap = new HashMap<Long, String>();
-
 	/**
 	 * 等待付款.
 	 */

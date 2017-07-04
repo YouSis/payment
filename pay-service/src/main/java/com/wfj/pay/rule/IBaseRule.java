@@ -4,8 +4,11 @@ import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.dto.OrderRequestDTO;
 import com.wfj.pay.dto.RuleResultDTO;
 import com.wfj.pay.po.PayBusinessPO;
+import com.wfj.pay.po.PayTradePO;
+import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.spring.SpringContextAware;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
@@ -33,4 +36,25 @@ public interface IBaseRule {
         }
         return ruleResultDTO;
     }
+
+     default  RuleResultDTO orderExistsValidate(String bpId,String bpOrderId,String orderTradeNo){
+         RuleResultDTO ruleResultDTO = new RuleResultDTO();
+         IPayTradeService payTradeService = SpringContextAware.getBeanByName("payTradeServiceImpl");
+         PayTradePO payTradePO;
+         //校验订单是否存在
+         if (StringUtils.isNotEmpty(orderTradeNo)) {
+             payTradePO = payTradeService.findByBpIdAndOrderTradeNo(Long.valueOf(bpId), orderTradeNo);
+             if (payTradePO == null) {
+                 ruleResultDTO.setErrorMessage("该门店不存在订单号为" + orderTradeNo + "的订单");
+                 ruleResultDTO.setSuccess(false);
+             }
+         } else {
+             payTradePO = payTradeService.findByBpIdAndBpOrderId(Long.valueOf(bpId), bpOrderId);
+             if (payTradePO == null) {
+                 ruleResultDTO.setErrorMessage("该门店不存在小票号为" + orderTradeNo + "的订单");
+                 ruleResultDTO.setSuccess(false);
+             }
+         }
+         return ruleResultDTO;
+     }
 }

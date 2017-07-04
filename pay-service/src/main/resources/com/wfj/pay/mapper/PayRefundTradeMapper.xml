@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayRefundTradeMapper">
+    <resultMap type="PayRefundTradePO" id="payRefundTradePO">
+        <id property="id" column="id"/>
+        <result property="bpRefundOrderId" column="BP_REFUND_ORDER_ID"/>
+        <result property="refundTradeNo" column="REFUND_TRADE_NO"/>
+        <result property="refundFee" column="REFUND_FEE"/>
+        <result property="status" column="STATUS"/>
+        <result property="createDate" column="CREATE_DATE"/>
+        <result property="refundDate" column="REFUND_DATE"/>
+        <result property="refundSerialNumber" column="REFUND_SERIAL_NUMBER"/>
+        <result property="batchNo" column="BATCH_NO"/>
+        <result property="orderTradeNo" column="ORDER_TRADE_NO"/>
+        <result property="bpId" column="BP_ID"/>
+        <result property="couponFee" column="COUPON_FEE"/>
+    </resultMap>
+
+    <insert id="insert" parameterType="PayRefundTradePO">
+        INSERT INTO pay_refund_trade
+        (ID, BP_REFUND_ORDER_ID, REFUND_TRADE_NO, REFUND_FEE, STATUS, CREATE_DATE, ORDER_TRADE_NO, BP_ID)
+        VALUES
+            (S_PAY_REFUND_TRADE.NEXTVAL, #{bpRefundOrderId, jdbcType=VARCHAR}, #{refundTradeNo, jdbcType=VARCHAR},
+             #{refundFee}, #{status}, #{createDate}, #{orderTradeNo, jdbcType=VARCHAR}, #{bpId})
+    </insert>
+
+
+    <update id="update" parameterType="PayRefundTradePO">
+        update pay_refund_trade set
+        STATUS=#{status},
+        REFUND_DATE=#{refundDate},
+        COUPON_FEE=#{couponFee}
+        <if test="refundSerialNumber != '' &amp;&amp; refundSerialNumber != null">
+            ,REFUND_SERIAL_NUMBER=#{refundSerialNumber, jdbcType=VARCHAR}
+        </if>
+        <if test="batchNo != '' &amp;&amp; batchNo != null">
+            ,BATCH_NO=#{batchNo, jdbcType=VARCHAR}
+        </if>
+        <where>
+            REFUND_TRADE_NO=#{refundTradeNo}
+        </where>
+    </update>
+
+    <select id="selectByBpIdAndBpRefundOrderId" resultMap="payRefundTradePO">
+        select * from pay_refund_trade
+        <where>
+            BP_REFUND_ORDER_ID=#{bpRefundOrderId}
+            and BP_ID=#{bpId}
+        </where>
+    </select>
+
+    <select id="selectRefundTradeByOrderTradeNo" parameterType="String" resultMap="payRefundTradePO">
+        SELECT
+        *
+        FROM
+        PAY_REFUND_TRADE
+        <where>
+            ORDER_TRADE_NO=#{orderTradeNo}
+        </where>
+    </select>
+
+    <select id="selectLastSuccessRefundTrade" parameterType="String" resultMap="payRefundTradePO">
+        SELECT * FROM (
+        SELECT * FROM PAY_REFUND_TRADE
+        <where>
+            ORDER_TRADE_NO=#{orderTradeNo}
+            AND status=2
+        </where>
+        ORDER BY create_date DESC
+        )
+        <where>
+            ROWNUM=1
+        </where>
+    </select>
+
+    <select id="selectRefundTradeCount" parameterType="String" resultType="int">
+        select count(ID)+1 from PAY_REFUND_TRADE
+        <where>
+            ORDER_TRADE_NO=#{orderTradeNo}
+        </where>
+    </select>
+
+    <select id="selectByRefundTradeNo" parameterType="String" resultMap="payRefundTradePO">
+        SELECT
+        *
+        FROM
+        PAY_REFUND_TRADE
+        <where>
+            REFUND_TRADE_NO=#{refundTradeNo}
+        </where>
+    </select>
+</mapper>

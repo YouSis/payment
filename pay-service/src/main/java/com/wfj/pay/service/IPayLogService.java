@@ -13,4 +13,12 @@ public interface IPayLogService {
      * @param status
      */
     void saveLog(Map<String,Object> logMap, String modelKey, String status);
+
+    /**
+     * 保存退款日志
+     * @param logMap
+     * @param modelKey
+     * @param status
+     */
+    void saveRefundLog(Map<String,Object> logMap, String modelKey, String status);
 }

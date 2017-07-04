@@ -28,7 +28,7 @@ public class PayNotifyInfoDTO implements Serializable {
     /**
      * 优惠金额
      */
-    private Double couponFee;
+    private double couponFee;
     /**
      * 支付状态
      */
@@ -67,11 +67,11 @@ public class PayNotifyInfoDTO implements Serializable {
         this.platformPayFormat = platformPayFormat;
     }
 
-    public Double getCouponFee() {
+    public double getCouponFee() {
         return couponFee;
     }
 
-    public void setCouponFee(Double couponFee) {
+    public void setCouponFee(double couponFee) {
         this.couponFee = couponFee;
     }
 

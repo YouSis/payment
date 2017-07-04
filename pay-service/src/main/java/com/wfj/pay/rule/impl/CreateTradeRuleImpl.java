@@ -15,11 +15,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Created by wjg on 2017/6/23.
  */
 @Component
-public class CreateTradeRuleImpl implements ICreateTradeRule {
+public class CreateTradeRuleImpl  implements ICreateTradeRule {
     @Autowired
     private IPayTradeService payTradeService;
     @Autowired
@@ -28,7 +30,7 @@ public class CreateTradeRuleImpl implements ICreateTradeRule {
     @Override
     public RuleResultDTO md5Validate(OrderRequestDTO orderRequestDTO) {
         RuleResultDTO ruleResultDTO = new RuleResultDTO();
-        if (!OrderEncryptUtils.checkSign(orderRequestDTO)) {
+        if (!OrderEncryptUtils.checkCreateOrderSign(orderRequestDTO)) {
             ruleResultDTO.setErrorMessage("签名错误,请检查参数");
             ruleResultDTO.setSuccess(false);
         }
@@ -53,7 +55,7 @@ public class CreateTradeRuleImpl implements ICreateTradeRule {
         String key = String.format(PayCacheHandle.REPEAT_SUBMIT__CHECK_CACHE_KEY, orderRequestDTO.getBpId() + orderRequestDTO.getBpOrderId());
         String bpOrder = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isEmpty(bpOrder)) {
-            stringRedisTemplate.opsForValue().set(key, key, 30);
+            stringRedisTemplate.opsForValue().set(key, key,30, TimeUnit.SECONDS);
         } else {
             ruleResultDTO.setErrorMessage(key + "该订单重复支付");
             ruleResultDTO.setSuccess(false);

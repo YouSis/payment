@@ -35,4 +35,12 @@ public class AppTest
     {
         assertTrue( true );
     }
+
+    public static void main(String[] args) {
+        long x = 1;
+        for(int i=1; i<=64;i++){
+            x= x*2;
+            System.out.println(x);
+        }
+    }
 }

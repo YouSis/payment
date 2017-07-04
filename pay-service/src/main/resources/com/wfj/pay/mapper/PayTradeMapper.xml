@@ -140,4 +140,17 @@
             #{orderTradeNo, jdbcType=VARCHAR}
         </where>
     </update>
+
+
+    <update id="updateOrderStatus">
+        UPDATE
+        PAY_TRADE
+        <set>
+            STATUS =#{status}
+        </set>
+        <where>
+            ORDER_TRADE_NO =#{orderTradeNo, jdbcType=VARCHAR}
+            AND STATUS = 1
+        </where>
+    </update>
 </mapper>

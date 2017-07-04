@@ -26,4 +26,6 @@ public interface PayTradeMapper {
     int updateOrderPayType(Map<String, Object> para);
 
     void updateOrderAfterPaySuccess(PayTradePO payTradePO);
+
+    void updateOrderStatus(@Param("orderTradeNo") String orderTrade,@Param("status") Long status);
 }
