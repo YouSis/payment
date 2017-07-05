@@ -1,5 +1,6 @@
 package com.wfj.pay.service.impl;
 
+import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.mapper.PayChannelMapper;
 import com.wfj.pay.po.PayChannelPO;
 import com.wfj.pay.service.IPayChannelService;
@@ -15,6 +16,7 @@ public class PayChannelServiceImpl implements IPayChannelService {
     private PayChannelMapper payChannelMapper;
 
     @Override
+    @DataSource("slave")
     public PayChannelPO findByCashierParams(Integer payService, String dicCode, String clientType, Long bpId) {
         return payChannelMapper.getPayChannelByBPDicCodePayService(bpId, dicCode, clientType, payService);
     }

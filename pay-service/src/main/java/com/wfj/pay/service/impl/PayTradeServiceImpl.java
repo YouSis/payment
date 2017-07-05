@@ -99,7 +99,8 @@ public class PayTradeServiceImpl implements IPayTradeService {
         return tradeDTO;
     }
 
-
+    @DataSource("master")
+    @Transactional
     private PayTradePO savePayTrade(OrderRequestDTO orderRequestDTO) {
         PayTradePO payTradePO = new PayTradePO();
         BeanUtils.copyProperties(orderRequestDTO, payTradePO);
@@ -126,7 +127,8 @@ public class PayTradeServiceImpl implements IPayTradeService {
         payTradeMapper.insert(payTradePO);
         return payTradePO;
     }
-
+    @DataSource("master")
+    @Transactional
     private void savePayLog(PayTradePO payTradePO) {
         Map<String, Object> map = ObjectUtil.beanToMap(payTradePO);
         map.put("status",PayTradeStatus.WAIT_PAY_NAME);

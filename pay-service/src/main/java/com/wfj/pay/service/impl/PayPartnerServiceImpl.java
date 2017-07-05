@@ -1,5 +1,6 @@
 package com.wfj.pay.service.impl;
 
+import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.mapper.PayPartnerAccountMapper;
 import com.wfj.pay.po.PayPartnerAccountPO;
 import com.wfj.pay.service.IPayPartnerAccountServive;
@@ -14,6 +15,7 @@ public class PayPartnerServiceImpl implements IPayPartnerAccountServive {
     @Autowired
     private PayPartnerAccountMapper partnerAccountMapper;
     @Override
+    @DataSource("slave")
     public PayPartnerAccountPO findPayPartnerAccoutById(Long id) {
         return partnerAccountMapper.selectById(id);
     }
