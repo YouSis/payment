@@ -4,6 +4,7 @@ import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.mapper.PayWeChatPayNotifyMapper;
 import com.wfj.pay.po.PayWeChatNotifyInfoPO;
 import com.wfj.pay.service.IPayWeChatPayNotifyService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,6 +13,7 @@ import org.springframework.transaction.annotation.Transactional;
  */
 @Service
 public class PayWeChatPayNotifyServiceImpl implements IPayWeChatPayNotifyService {
+    @Autowired
     private PayWeChatPayNotifyMapper payWeChatPayNotifyMapper;
     @Override
     @DataSource("master")

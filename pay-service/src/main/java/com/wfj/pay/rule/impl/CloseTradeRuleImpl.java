@@ -6,11 +6,13 @@ import com.wfj.pay.rule.ICloseTradeRule;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.utils.OrderEncryptUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 
 /**
  * 关闭订单的规则校验实现类
  * Created by wjg on 2017/6/29.
  */
+@Component
 public class CloseTradeRuleImpl implements ICloseTradeRule {
 
     @Override

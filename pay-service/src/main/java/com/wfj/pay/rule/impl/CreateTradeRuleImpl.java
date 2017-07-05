@@ -21,7 +21,7 @@ import java.util.concurrent.TimeUnit;
  * Created by wjg on 2017/6/23.
  */
 @Component
-public class CreateTradeRuleImpl  implements ICreateTradeRule {
+public class CreateTradeRuleImpl implements ICreateTradeRule {
     @Autowired
     private IPayTradeService payTradeService;
     @Autowired
@@ -55,9 +55,9 @@ public class CreateTradeRuleImpl  implements ICreateTradeRule {
         String key = String.format(PayCacheHandle.REPEAT_SUBMIT__CHECK_CACHE_KEY, orderRequestDTO.getBpId() + orderRequestDTO.getBpOrderId());
         String bpOrder = stringRedisTemplate.opsForValue().get(key);
         if (StringUtils.isEmpty(bpOrder)) {
-            stringRedisTemplate.opsForValue().set(key, key,30, TimeUnit.SECONDS);
+            stringRedisTemplate.opsForValue().set(key, key, 30, TimeUnit.SECONDS);
         } else {
-            ruleResultDTO.setErrorMessage(key + "该订单重复支付");
+            ruleResultDTO.setErrorMessage("小票号为" + orderRequestDTO.getBpOrderId() + "的订单重复支付");
             ruleResultDTO.setSuccess(false);
         }
         return ruleResultDTO;

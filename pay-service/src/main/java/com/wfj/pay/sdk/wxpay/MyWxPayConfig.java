@@ -53,6 +53,6 @@ public class MyWxPayConfig extends  WXPayConfig {
 
     @Override
     IWXPayDomain getWXPayDomain() {
-        return null;
+        return WXPayDomainSimpleImpl.instance();
     }
 }

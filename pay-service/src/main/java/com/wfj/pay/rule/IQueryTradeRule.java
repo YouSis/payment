@@ -1,6 +1,5 @@
 package com.wfj.pay.rule;
 
-import com.oracle.tools.packager.JreUtils;
 import com.wfj.pay.dto.OrderQueryRequestDTO;
 import com.wfj.pay.dto.RuleResultDTO;
 

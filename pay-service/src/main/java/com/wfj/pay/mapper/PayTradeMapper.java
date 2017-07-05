@@ -17,7 +17,7 @@ public interface PayTradeMapper {
 
     void update(PayTradePO orderPO);
 
-    PayTradePO selectByOrderTradeNo(String orderTradeNo);
+    PayTradePO selectByOrderTradeNo(@Param("orderTradeNo") String orderTradeNo);
 
     PayTradePO selectByBpIdAndBpOrderId(@Param("bpId") Long bpId, @Param("bpOrderId") String bpOrderId);
 

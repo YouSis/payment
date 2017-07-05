@@ -71,7 +71,7 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 	/**
 	 * 订单总金额，单位为分
 	 */
-	private Integer total_fee;
+	private String total_fee;
 	/**
 	 * 货币种类 : CNY代表人民币
 	 */
@@ -79,7 +79,7 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 	/**
 	 * 现金支付金额
 	 */
-	private Integer cash_fee;
+	private String cash_fee;
 	/**
 	 * 现金支付货币类型
 	 */
@@ -88,15 +88,15 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 	 * 代金券或立减优惠金额
 	 * 代金券或立减优惠金额<=订单总金额，订单总金额-代金券或立减优惠金额=现金支付金额
 	 */
-	private Integer coupon_fee; 
+	private String coupon_fee;
 	/**
 	 * 后期自主添加优惠金额字段
 	 */
-	private double couponFee;
+	private String couponFee;
 	/**
 	 * 代金券或立减优惠使用数量
 	 */
-	private Integer coupon_count;
+	private String coupon_count;
 	/**
 	 * 微信支付订单号
 	 */
@@ -116,7 +116,7 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 	/**
 	 * 通知类型.
 	 */
-	private Integer notifyType;
+	private String notifyType;
 	/**
 	 * 以下字段在return_code 和result_code 都为SUCCESS 的时候有返回
 	 */
@@ -125,7 +125,7 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
      * 是否关注了公众号
      */
     private String is_subscribe = "";
-	
+
 	public String getReturn_code() {
 		return return_code;
 	}
@@ -230,11 +230,11 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 		this.bank_type = bank_type;
 	}
 
-	public Integer getTotal_fee() {
+	public String getTotal_fee() {
 		return total_fee;
 	}
 
-	public void setTotal_fee(Integer total_fee) {
+	public void setTotal_fee(String total_fee) {
 		this.total_fee = total_fee;
 	}
 
@@ -246,11 +246,11 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 		this.fee_type = fee_type;
 	}
 
-	public Integer getCash_fee() {
+	public String getCash_fee() {
 		return cash_fee;
 	}
 
-	public void setCash_fee(Integer cash_fee) {
+	public void setCash_fee(String cash_fee) {
 		this.cash_fee = cash_fee;
 	}
 
@@ -262,19 +262,27 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 		this.cash_fee_type = cash_fee_type;
 	}
 
-	public Integer getCoupon_fee() {
+	public String getCoupon_fee() {
 		return coupon_fee;
 	}
 
-	public void setCoupon_fee(Integer coupon_fee) {
+	public void setCoupon_fee(String coupon_fee) {
 		this.coupon_fee = coupon_fee;
 	}
 
-	public Integer getCoupon_count() {
+	public String getCouponFee() {
+		return couponFee;
+	}
+
+	public void setCouponFee(String couponFee) {
+		this.couponFee = couponFee;
+	}
+
+	public String getCoupon_count() {
 		return coupon_count;
 	}
 
-	public void setCoupon_count(Integer coupon_count) {
+	public void setCoupon_count(String coupon_count) {
 		this.coupon_count = coupon_count;
 	}
 
@@ -310,20 +318,12 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 		this.time_end = time_end;
 	}
 
-	public Integer getNotifyType() {
+	public String getNotifyType() {
 		return notifyType;
 	}
 
-	public void setNotifyType(Integer notifyType) {
+	public void setNotifyType(String notifyType) {
 		this.notifyType = notifyType;
-	}
-
-	public double getCouponFee() {
-		return couponFee;
-	}
-
-	public void setCouponFee(double couponFee) {
-		this.couponFee = couponFee;
 	}
 
 	public String getTrade_state() {
@@ -334,25 +334,13 @@ public class PayWeChatNotifyInfoPO implements java.io.Serializable{
 		this.trade_state = trade_state;
 	}
 
-	@Override
-	public String toString() {
-		return "PayWeChatNotifyInfoPO [return_code=" + return_code
-				+ ", return_msg=" + return_msg + ", appid=" + appid
-				+ ", mch_id=" + mch_id + ", device_info=" + device_info
-				+ ", nonce_str=" + nonce_str + ", sign=" + sign
-				+ ", result_code=" + result_code + ", err_code=" + err_code
-				+ ", err_code_des=" + err_code_des + ", openid=" + openid
-				+ ", trade_type=" + trade_type + ", bank_type=" + bank_type
-				+ ", total_fee=" + total_fee + ", fee_type=" + fee_type
-				+ ", cash_fee=" + cash_fee + ", cash_fee_type=" + cash_fee_type
-				+ ", coupon_fee=" + coupon_fee + ", couponFee=" + couponFee
-				+ ", coupon_count=" + coupon_count + ", transaction_id="
-				+ transaction_id + ", out_trade_no=" + out_trade_no
-				+ ", attach=" + attach + ", time_end=" + time_end
-				+ ", notifyType=" + notifyType + ", trade_state=" + trade_state
-				+ "]";
+	public String getIs_subscribe() {
+		return is_subscribe;
 	}
 
+	public void setIs_subscribe(String is_subscribe) {
+		this.is_subscribe = is_subscribe;
+	}
 }
 
 

@@ -1,6 +1,7 @@
 package com.wfj.pay.service.impl;
 
 import com.wfj.pay.annotation.DataSource;
+import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.constant.*;
 import com.wfj.pay.dto.OrderRequestDTO;
 import com.wfj.pay.dto.OrderResponseDTO;
@@ -112,7 +113,7 @@ public class PayTradeServiceImpl implements IPayTradeService {
         payTradePO.setCreateDateDay(Long.valueOf(DAY_FORMAT.format(timestamp)));
         payTradePO.setCreateDateMonth(Long.valueOf(MONTH_FORMAT.format(timestamp)));
         payTradePO.setCreateDateQuarter(Long.valueOf(CalendarUtil.getCurrentQuarter()));
-        payTradePO.setPayBank(orderRequestDTO.getPayService());
+        payTradePO.setPayBank(orderRequestDTO.getPayType());
         payTradePO.setNeedPayPrice(orderRequestDTO.getTotalFee());
         payTradePO.setStatus(1L);
         payTradePO.setNotifyNum("0");
@@ -128,6 +129,8 @@ public class PayTradeServiceImpl implements IPayTradeService {
 
     private void savePayLog(PayTradePO payTradePO) {
         Map<String, Object> map = ObjectUtil.beanToMap(payTradePO);
+        map.put("status",PayTradeStatus.WAIT_PAY_NAME);
+        map.put("bpName", PayCacheHandle.getBusinessPOByBpId(payTradePO.getBpId()).getBpName());
         payLogService.saveLog(map, PayLogConstant.PAY_STEP_CREATE, PayLogConstant.SUCCESS_NAME);
     }
 
@@ -151,7 +154,7 @@ public class PayTradeServiceImpl implements IPayTradeService {
         PayTradePO tradePO = findByOrderTradeNo(payNotifyInfoDTO.getOrderTradeNo());
         Map<String, Object> logMap = new HashMap<String, Object>();
         logMap.put("paySerialNumber", payNotifyInfoDTO.getPaySerialNumber());
-        logMap.put("payBank", tradePO.getPayService());
+        logMap.put("payBank", tradePO.getPayType());
         logMap.put("orderTradeNo", tradePO.getOrderTradeNo());
         logMap.put("totalFee", tradePO.getTotalFee());
         logMap.put("status", PayTradeStatus.PAYED_NAME);
@@ -192,6 +195,15 @@ public class PayTradeServiceImpl implements IPayTradeService {
 
     @Override
     public OrderResponseDTO pay(PayTradeDTO payTradeDTO) {
+        //1、保存去支付的日志
+        Map<String,Object> logMap = new HashMap<>();
+        logMap.put("orderTradeNo",payTradeDTO.getOrderTradeNo());
+        logMap.put("payType",payTradeDTO.getPayType());
+        logMap.put("payBank",payTradeDTO.getPayType());
+        logMap.put("totalFee",payTradeDTO.getTotalFee());
+        logMap.put("status",PayTradeStatus.WAIT_PAY_NAME);
+        payLogService.saveLog(logMap,PayLogConstant.PAY_STEP_TOPAY,PayLogConstant.SUCCESS_NAME);
+        //2、调用策略类发起支付
         PayTypeEnum typeEnum = PayTypeEnum.valueOf(payTradeDTO.getPayType());
         Optional<IPayStrategyService> payStrategy = strategyList.stream().filter(strategy -> strategy.match(typeEnum)).findFirst();
         return payStrategy.get().toPay(payTradeDTO);

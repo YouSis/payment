@@ -72,6 +72,14 @@
         </where>
     </select>
 
+    <select id="selectByOrderTradeNo" parameterType="String" resultMap="payTradePO">
+        SELECT *
+        FROM PAY_TRADE
+        <where>
+            ORDER_TRADE_NO =#{orderTradeNo}
+        </where>
+    </select>
+
     <select id="selectByBpIdAndOrderTradeNo" resultMap="payTradePO">
         SELECT *
         FROM PAY_TRADE
@@ -98,7 +106,7 @@
         USERNAME,NOTIFY_DATE,NOTIFY_NUM, NOTIFY_STATUS,
         BP_PARAMS, NOTIFY_ID,
         INIT_ORDER_TERMINAL,FINAL_PAY_TERMINAL,
-        PAY_LIMIT,PAY_IP,PAY_UNID,PAY_CURRENCY,MER_CODE,PAY_SERVICE,GOODS_CONTENT)
+        PAY_LIMIT,PAY_IP,PAY_UNID,PAY_CURRENCY,MER_CODE,PAY_SERVICE,GOODS_CONTENT,NEED_PAY_PRICE,PAY_PARTNER,PAY_MEDIUM_CODE)
         VALUES(S_PAY_TRADE.NEXTVAL,
         #{orderTradeNo},#{payType,jdbcType=VARCHAR},#{payBank,jdbcType=VARCHAR},#{goodsName,jdbcType=VARCHAR},#{remark,jdbcType=VARCHAR},
         #{totalFee},#{status},#{createDate},#{createDateFormat},#{bpId},#{bpOrderId},
@@ -112,7 +120,8 @@
         #{bpParams,jdbcType=VARCHAR},#{notifyId,jdbcType=VARCHAR},
         #{initOrderTerminal,jdbcType=VARCHAR},#{finalPayTerminal,jdbcType=VARCHAR},
         #{payLimit,jdbcType=VARCHAR},#{payIp,jdbcType=VARCHAR},#{payUnid,jdbcType=VARCHAR},#{payCurrency,jdbcType=VARCHAR},
-        #{merCode,jdbcType=VARCHAR},#{payService,jdbcType=NUMERIC},#{goodsContent,jdbcType=VARCHAR})
+        #{merCode,jdbcType=VARCHAR},#{payService,jdbcType=NUMERIC},#{goodsContent,jdbcType=VARCHAR},
+        #{needPayPrice,jdbcType=DOUBLE},#{payPartner,jdbcType=BIGINT},#{payMediumCode,jdbcType=VARCHAR})
     </insert>
 
 
@@ -128,10 +137,10 @@
             PAY_DATE_MONTH=#{payDateMonth},
             PAY_DATE_QUARTER=#{payDateQuarter,jdbcType=BIGINT},
             COUPON_FEE=#{couponFee,jdbcType=DOUBLE}
-            <if test="platformPayDate != null &amp;&amp; platformPayDate !=''">
+            <if test="platformPayDate != null">
                 , PLATFORM_PAY_DATE=#{platformPayDate}
             </if>
-            <if test="platformPayFormat != null &amp;&amp; platformPayFormat != ''">
+            <if test="platformPayFormat != null">
                 ,PLATFORM_PAY_FORMAT=#{platformPayFormat}
             </if>
         </set>

@@ -1,10 +1,13 @@
 package com.wfj.pay.dto;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import java.io.Serializable;
 
 /**
  * Created by wjg on 2017/6/30.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class RefundOrderResponseDTO implements Serializable {
     private static final long serialVersionUID = 7626313058983422630L;
 

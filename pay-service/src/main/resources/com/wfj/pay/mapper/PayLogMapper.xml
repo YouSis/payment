@@ -10,7 +10,7 @@
         <result property="ownPlatform" column="own_platform" />
     </resultMap>
 
-    <insert id="saveByPO" parameterType="PayLogPO">
+    <insert id="insert" parameterType="PayLogPO">
         INSERT
         INTO
         PAY_LOG

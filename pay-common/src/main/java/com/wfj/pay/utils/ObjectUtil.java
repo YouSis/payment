@@ -101,6 +101,7 @@ public class ObjectUtil {
             }
         }catch (Exception e){
             logger.error("mapToBean 转换错误"+e.toString(), e);
+            throw new RuntimeException(e);
         }
         return obj;
     }

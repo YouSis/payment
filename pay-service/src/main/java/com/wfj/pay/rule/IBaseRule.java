@@ -51,7 +51,7 @@ public interface IBaseRule {
          } else {
              payTradePO = payTradeService.findByBpIdAndBpOrderId(Long.valueOf(bpId), bpOrderId);
              if (payTradePO == null) {
-                 ruleResultDTO.setErrorMessage("该门店不存在小票号为" + orderTradeNo + "的订单");
+                 ruleResultDTO.setErrorMessage("该门店不存在小票号为" + bpOrderId + "的订单");
                  ruleResultDTO.setSuccess(false);
              }
          }

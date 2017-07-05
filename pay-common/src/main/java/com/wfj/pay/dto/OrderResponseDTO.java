@@ -1,10 +1,16 @@
 package com.wfj.pay.dto;
 
+import com.alibaba.fastjson.serializer.JSONSerializable;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+
 import java.io.Serializable;
 
 /**
  * Created by wjg on 2017/6/22.
  */
+@JsonInclude(value = JsonInclude.Include.NON_NULL)
 public class OrderResponseDTO implements Serializable{
     private static final long serialVersionUID = -1009017617586265037L;
 

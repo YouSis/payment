@@ -51,13 +51,12 @@ public class OfflinePayController {
         }
         orderRequestDTO.setPayIp(WebUtil.getIpAddress(request));
         try {
-            offlinePayDubbo.createOrder(orderRequestDTO);
+            orderResponseDTO = offlinePayDubbo.createOrder(orderRequestDTO);
         } catch (Exception e) {
             //调用dubbo失败，可能是超时，也可能是服务方出错了
             logger.error(e.toString(), e);
             orderResponseDTO = new OrderResponseDTO("1", "false", "系统错误,请重试");
         }
-        orderResponseDTO = new OrderResponseDTO("0", "true", "OK");
         logger.info("--->返回线下支付请求的响应:" + JSON.toJSONString(orderResponseDTO));
         return orderResponseDTO;
     }
@@ -278,7 +277,7 @@ public class OfflinePayController {
     private OrderResponseDTO validate(OrderRequestDTO orderRequestDTO, BindingResult result) {
         OrderResponseDTO orderResponseDTO = null;
         String valResult = processValidateResult(result);
-        if (StringUtils.isNotEmpty(processValidateResult(result))) {
+        if (StringUtils.isNotEmpty(valResult)) {
             orderResponseDTO = new OrderResponseDTO("1", "false", valResult);
             return orderResponseDTO;
         }

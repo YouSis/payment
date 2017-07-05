@@ -29,8 +29,10 @@ import java.sql.Timestamp;
 import java.text.ParseException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by wjg on 2017/6/26.
@@ -70,8 +72,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         HashMap<String, String> data = new HashMap<String, String>();
         data.put("body", payTradeDTO.getGoodsName());
         data.put("out_trade_no", payTradeDTO.getOrderTradeNo());
-        data.put("total_fee", new BigDecimal(String.valueOf(payTradeDTO.getTotalFee())).multiply(
-                new BigDecimal("100")).toString());
+        data.put("total_fee", String.valueOf(new BigDecimal(String.valueOf(payTradeDTO.getTotalFee())).multiply(
+                new BigDecimal("100")).intValue()));
         data.put("spbill_create_ip", SPBILL_CREATE_IP);
         data.put("auth_code", payTradeDTO.getAuthCode());
         //2、调用微信sdk发起支付
@@ -79,7 +81,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         Map<String, String> resultMap;
         try {
             WXPay wxPay = new WXPay(wxPayConfig);
-            resultMap = wxPay.unifiedOrder(data);
+            resultMap = wxPay.microPay(data);
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
@@ -90,7 +92,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         long endTime = System.currentTimeMillis();
         logger.info("--->订单号为{}的订单请求微信下单的时间为{}毫秒", payTradeDTO.getOrderTradeNo(), endTime - beginTime);
         //3、处理微信返回的结果
-        responseDTO = processResponse(resultMap);
+        responseDTO = processResponse(resultMap,payTradeDTO.getOrderTradeNo());
         return responseDTO;
     }
 
@@ -161,8 +163,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         Map<String, String> data = new HashMap<>();
         data.put("out_trade_no", refundTradePO.getOrderTradeNo());
         data.put("out_refund_no",refundTradePO.getRefundTradeNo());
-        data.put("total_fee",new BigDecimal(String.valueOf(tradePO.getTotalFee())).multiply(new BigDecimal("100")).toString());
-        data.put("refund_fee",new BigDecimal(String.valueOf(refundTradePO.getRefundFee())).multiply(new BigDecimal("100")).toString());
+        data.put("total_fee",String.valueOf(new BigDecimal(String.valueOf(tradePO.getTotalFee())).multiply(new BigDecimal("100")).intValue()));
+        data.put("refund_fee",String.valueOf(new BigDecimal(String.valueOf(refundTradePO.getRefundFee())).multiply(new BigDecimal("100")).intValue()));
         Map<String, String> resultMap;
         try {
             WXPay wxPay = new WXPay(myWxPayConfig);
@@ -314,7 +316,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
      * @param resultMap
      * @return
      */
-    private OrderResponseDTO processResponse(Map<String, String> resultMap) {
+    private OrderResponseDTO processResponse(Map<String, String> resultMap,String orderTradeNo) {
         OrderResponseDTO orderResponseDTO;
         String returnCode = resultMap.get("return_code");//报文格式是否正确
         String resultCode = resultMap.get("result_code");//业务状态，是否支付成功
@@ -326,7 +328,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         //2、判断业务状态
         if (WXPayConstants.SUCCESS.equals(resultCode)) {
             //支付成功
-            DistributedLock zkLock = new DistributedLock(distributedLockZKUrl, resultMap.get("out_trade_no"));
+            DistributedLock zkLock = new DistributedLock(distributedLockZKUrl, orderTradeNo);
             zkLock.lock();
             try {
                 orderResponseDTO =  doAfterWeChatSuccess(resultMap);
@@ -341,20 +343,20 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
             if (WXPayConstants.ERROR_CODE_USERPAYING.equals(errCode)) {
                 orderResponseDTO = new OrderResponseDTO("0", "false", errCodeDes);
                 //开启线程进行轮训微信
-                executorService.submit(() -> {
+                Future<?> future = executorService.submit(() -> {
                     for (int i = 0; i < 6; i++) {
                         // 睡眠一定时间后再查询 总共查6次，中间间隔5s
                         try {
-                            Thread.sleep(Long.valueOf(5000));
+                            Thread.sleep(7500);
                         } catch (InterruptedException e) {
                             logger.error(e.toString(), e);
                         }
-                        PayTradePO tradePO = payTradeService.findByOrderTradeNo(resultMap.get("out_trade_no"));
-                        if(PayTradeStatus.PAYED.equals(tradePO.getStatus())){
+                        PayTradePO tradePO = payTradeService.findByOrderTradeNo(orderTradeNo);
+                        if (PayTradeStatus.PAYED.equals(tradePO.getStatus())) {
                             break;
                         }
                         OrderResponseDTO responseDTO = queryOrder(tradePO);
-                        if("0".equals(responseDTO.getResultCode()) && "true".equals(responseDTO.getResultMsg())){
+                        if ("0".equals(responseDTO.getResultCode()) && "true".equals(responseDTO.getResultMsg())) {
                             break;
                         }
                     }
@@ -430,6 +432,6 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
      */
     private MyWxPayConfig getMyWxPayConfig(Long payPartnerAccoutId) {
         PayPartnerAccountPO payPartnerAccout = PayCacheHandle.getPayPartnerAccout(payPartnerAccoutId);
-        return new MyWxPayConfig(payPartnerAccout.getAppid(), payPartnerAccout.getPartner(), payPartnerAccout.getEncryptKey(), payPartnerAccout.getKeyPath());
+        return new MyWxPayConfig(payPartnerAccout.getAppid(), payPartnerAccout.getPartner(), payPartnerAccout.getEncryptKey(), payPartnerAccout.getKeyPath()+"apiclient_cert.p12");
     }
 }
