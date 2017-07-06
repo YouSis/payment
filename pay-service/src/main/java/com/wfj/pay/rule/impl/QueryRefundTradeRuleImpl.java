@@ -28,6 +28,7 @@ public class QueryRefundTradeRuleImpl implements IQueryRefundTradeRule {
     public RuleResultDTO refundExistValidate(RefundOrderQueryRequestDTO refundQueryDTO) {
         RuleResultDTO ruleResultDTO = new RuleResultDTO();
         PayTradePO tradePO;
+        PayRefundTradePO refundTradePO;
         if(StringUtils.isNotEmpty(refundQueryDTO.getOrderTradeNo())){
             tradePO= tradeService.findByBpIdAndOrderTradeNo(Long.valueOf(refundQueryDTO.getBpId()), refundQueryDTO.getOrderTradeNo());
             if(tradePO == null){
@@ -35,18 +36,19 @@ public class QueryRefundTradeRuleImpl implements IQueryRefundTradeRule {
                 ruleResultDTO.setErrorMessage("支付平台订单号为"+refundQueryDTO.getOrderTradeNo()+"不存在，请检查。");
                 return ruleResultDTO;
             }
-            PayRefundTradePO lastSuccessRefundTrade = refundTradeService.findLastSuccessRefundTrade(refundQueryDTO.getOrderTradeNo());
-            if(lastSuccessRefundTrade==null){
+            refundTradePO = refundTradeService.findLastSuccessRefundTrade(refundQueryDTO.getOrderTradeNo());
+            if(refundTradePO==null){
                 ruleResultDTO.setSuccess(false);
                 ruleResultDTO.setErrorMessage("支付平台订单号为"+refundQueryDTO.getOrderTradeNo()+"下目前还没有退款成功的退款单,请检查");
                 return ruleResultDTO;
             }
-        }
-        PayRefundTradePO refundTradePO = refundTradeService.findPayRefundTradePo(Long.valueOf(refundQueryDTO.getBpId()), refundQueryDTO.getBpRefundOrderId());
-        if(refundTradePO==null){
-            ruleResultDTO.setSuccess(false);
-            ruleResultDTO.setErrorMessage("退款小票号为"+refundQueryDTO.getBpRefundOrderId()+"的退款单不存在，请检查。");
-            return ruleResultDTO;
+        }else{
+            refundTradePO = refundTradeService.findPayRefundTradePo(Long.valueOf(refundQueryDTO.getBpId()), refundQueryDTO.getBpRefundOrderId());
+            if(refundTradePO==null){
+                ruleResultDTO.setSuccess(false);
+                ruleResultDTO.setErrorMessage("退款小票号为"+refundQueryDTO.getBpRefundOrderId()+"的退款单不存在，请检查。");
+                return ruleResultDTO;
+            }
         }
         tradePO = tradeService.findByOrderTradeNo(refundTradePO.getOrderTradeNo());
 

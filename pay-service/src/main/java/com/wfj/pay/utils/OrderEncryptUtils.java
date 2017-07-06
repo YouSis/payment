@@ -1,5 +1,7 @@
 package com.wfj.pay.utils;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.fasterxml.jackson.databind.util.BeanUtil;
 import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.dto.KeyValue;
@@ -197,5 +199,17 @@ public class OrderEncryptUtils {
             }
         }
         return prestr;
+    }
+
+    public static void main(String[] args) {
+        Map<String,String> map = new HashMap<>();
+        map.put("bpId","10045");
+        map.put("bpOrderId","809712200162");
+        map.put("antiPhishingKey","36274c2ee2f74353a077cc10a9186153");
+        String sign  = getSign(map,"7adfc5eb0899b601a4e56821bf3a49e0");
+        map.put("sign",sign);
+        String s = JSON.toJSONString(map);
+        System.out.println(s);
+
     }
 }

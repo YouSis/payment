@@ -85,6 +85,8 @@ public class WeChatPayServiceImpl implements IWeChatPayService {
         //2、保存退款通知信息
         PayRefundWeChatOfNotifyInfoPO refundNotifyPO = (PayRefundWeChatOfNotifyInfoPO)ObjectUtil.mapToBean(PayRefundWeChatOfNotifyInfoPO.class, resultMap);
         refundNotifyPO.setRefundDate(new Timestamp(System.currentTimeMillis()));
+        refundNotifyPO.setOut_refund_no(notifyInfoDTO.getRefundTradeNo());
+        refundNotifyPO.setRefund_id(notifyInfoDTO.getRefundSerialNumber());
         refundNotifyPO.setRefundFee(new BigDecimal(refundNotifyPO.getRefund_fee()).divide(new BigDecimal("100")).doubleValue());
         refundWeChatOfNotifyService.savePayRefundWeChatOfNotifyInfo(refundNotifyPO);
         //3、转换成dto返回

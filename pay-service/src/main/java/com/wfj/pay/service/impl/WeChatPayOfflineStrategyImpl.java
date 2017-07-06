@@ -18,6 +18,7 @@ import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.service.IWeChatPayService;
 import com.wfj.pay.utils.DistributedLock;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -209,6 +210,12 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         }
         //2、判断业务状态
         if (WXPayConstants.SUCCESS.equals(resultCode)) {
+            //退款查询返回的报文有下标，顾进行转换
+            resultMap.put("out_refund_no",resultMap.get("out_refund_no_0"));
+            resultMap.put("refund_id",resultMap.get("refund_id_0"));
+            if(StringUtils.isNotEmpty(resultMap.get("coupon_refund_fee_0"))){
+                resultMap.put("coupon_refund_fee",resultMap.get("coupon_refund_fee_0"));
+            }
             //退款成功之后更新退款单的状态
             responseDTO = weChatPayService.doAfterRefundSuccess(resultMap);
         } else {
