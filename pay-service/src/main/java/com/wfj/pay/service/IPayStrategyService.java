@@ -37,7 +37,7 @@ public interface IPayStrategyService {
      * @param tradePO
      * @return
      */
-    OrderResponseDTO closeOrder(PayTradePO tradePO);
+    OrderResponseDTO closeOrder(PayTradePO tradePO,String source);
 
     /**
      * 退款

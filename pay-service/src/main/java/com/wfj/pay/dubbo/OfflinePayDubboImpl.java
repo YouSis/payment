@@ -3,6 +3,7 @@ package com.wfj.pay.dubbo;
 import com.alibaba.dubbo.config.annotation.Service;
 import com.alibaba.fastjson.JSON;
 import com.wfj.pay.constant.CloseOrderErrorEnum;
+import com.wfj.pay.constant.PayLogConstant;
 import com.wfj.pay.constant.PayTradeStatus;
 import com.wfj.pay.constant.PayTypeEnum;
 import com.wfj.pay.dto.*;
@@ -101,7 +102,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
         }
         //2、发起关闭
         PayTradePO tradePO = payTradeService.findByBpOrderIdOrOrderTradeNo(Long.valueOf(orderCloseRequestDTO.getBpId()),orderCloseRequestDTO.getBpOrderId(),orderCloseRequestDTO.getOrderTradeNo());
-        responseDTO = payTradeService.close(tradePO);
+        responseDTO = payTradeService.close(tradePO, PayLogConstant.OPERATE_SOURCE_PERSON);
         long closeOrderEnd = System.currentTimeMillis();
         logger.info("--->返回线下关闭订单的响应:" + JSON.toJSONString(responseDTO));
         logger.info("--->" + tradePO.getOrderTradeNo() + "订单关闭请求总耗时：" + (closeOrderEnd - closeOrderStart) + "ms");

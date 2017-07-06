@@ -83,6 +83,12 @@ public class PayTradeServiceImpl implements IPayTradeService {
         return payTradeMapper.selectByOrderTradeNo(orderTradeNo);
     }
 
+    @Override
+    @DataSource("slave")
+    public List<PayTradePO> findByTime(long beginTimeStamp, long endTimeStamp) {
+        return payTradeMapper.selectByTimeStamp(beginTimeStamp, endTimeStamp);
+    }
+
 
     @Override
     @DataSource("master")
@@ -127,11 +133,12 @@ public class PayTradeServiceImpl implements IPayTradeService {
         payTradeMapper.insert(payTradePO);
         return payTradePO;
     }
+
     @DataSource("master")
     @Transactional
     private void savePayLog(PayTradePO payTradePO) {
         Map<String, Object> map = ObjectUtil.beanToMap(payTradePO);
-        map.put("status",PayTradeStatus.WAIT_PAY_NAME);
+        map.put("status", PayTradeStatus.WAIT_PAY_NAME);
         map.put("bpName", PayCacheHandle.getBusinessPOByBpId(payTradePO.getBpId()).getBpName());
         payLogService.saveLog(map, PayLogConstant.PAY_STEP_CREATE, PayLogConstant.SUCCESS_NAME);
     }
@@ -182,29 +189,29 @@ public class PayTradeServiceImpl implements IPayTradeService {
     @Override
     @DataSource("master")
     @Transactional
-    public void doAfterCloseSuccess(String orderTradeNo,String operateSource) {
+    public void doAfterCloseSuccess(String orderTradeNo, String operateSource) {
         PayTradePO payTradePO = findByOrderTradeNo(orderTradeNo);
         //1、更新订单状态
         payTradeMapper.updateOrderStatus(orderTradeNo, PayTradeStatus.CANCELED);
         //2、保存日志
-        Map<String,Object> logMap = new HashMap<>();
-        logMap.put("bpId",payTradePO.getBpId());
-        logMap.put("bpOrderId",payTradePO.getBpOrderId());
-        logMap.put("orderTradeNo",payTradePO.getOrderTradeNo());
-        logMap.put("operateSource",PayLogConstant.OPERATE_SOURCE_PERSON.equals(operateSource)?"手工":"调度");
-        payLogService.saveLog(logMap,PayLogConstant.PAY_STEP_CLOSE,PayLogConstant.SUCCESS_NAME);
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("bpId", payTradePO.getBpId());
+        logMap.put("bpOrderId", payTradePO.getBpOrderId());
+        logMap.put("orderTradeNo", payTradePO.getOrderTradeNo());
+        logMap.put("operateSource", PayLogConstant.OPERATE_SOURCE_PERSON.equals(operateSource) ? PayLogConstant.OPERATE_SOURCE_PERSON_NAME : PayLogConstant.OPERATE_SOURCE_SCHEDULE_NAME);
+        payLogService.saveLog(logMap, PayLogConstant.PAY_STEP_CLOSE, PayLogConstant.SUCCESS_NAME);
     }
 
     @Override
     public OrderResponseDTO pay(PayTradeDTO payTradeDTO) {
         //1、保存去支付的日志
-        Map<String,Object> logMap = new HashMap<>();
-        logMap.put("orderTradeNo",payTradeDTO.getOrderTradeNo());
-        logMap.put("payType",payTradeDTO.getPayType());
-        logMap.put("payBank",payTradeDTO.getPayType());
-        logMap.put("totalFee",payTradeDTO.getTotalFee());
-        logMap.put("status",PayTradeStatus.WAIT_PAY_NAME);
-        payLogService.saveLog(logMap,PayLogConstant.PAY_STEP_TOPAY,PayLogConstant.SUCCESS_NAME);
+        Map<String, Object> logMap = new HashMap<>();
+        logMap.put("orderTradeNo", payTradeDTO.getOrderTradeNo());
+        logMap.put("payType", payTradeDTO.getPayType());
+        logMap.put("payBank", payTradeDTO.getPayType());
+        logMap.put("totalFee", payTradeDTO.getTotalFee());
+        logMap.put("status", PayTradeStatus.WAIT_PAY_NAME);
+        payLogService.saveLog(logMap, PayLogConstant.PAY_STEP_TOPAY, PayLogConstant.SUCCESS_NAME);
         //2、调用策略类发起支付
         PayTypeEnum typeEnum = PayTypeEnum.valueOf(payTradeDTO.getPayType());
         Optional<IPayStrategyService> payStrategy = strategyList.stream().filter(strategy -> strategy.match(typeEnum)).findFirst();
@@ -224,17 +231,17 @@ public class PayTradeServiceImpl implements IPayTradeService {
     }
 
     @Override
-    public OrderResponseDTO close(PayTradePO tradePO) {
+    public OrderResponseDTO close(PayTradePO tradePO, String source) {
         OrderResponseDTO orderResponseDTO;
         //1、如果本地已经是支付状态，则不能关闭
-        if(PayTradeStatus.PAYED.equals(tradePO.getStatus())){
-            orderResponseDTO = new OrderResponseDTO(CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getCode(),"false",CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getMsg());
+        if (PayTradeStatus.PAYED.equals(tradePO.getStatus())) {
+            orderResponseDTO = new OrderResponseDTO(CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getCode(), "false", CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getMsg());
             return orderResponseDTO;
         }
         //2、如果本地是未支付状态，则调用策略类先查询，如果确实未支付则调用关闭接口
         PayTypeEnum typeEnum = PayTypeEnum.valueOf(tradePO.getPayType());
         Optional<IPayStrategyService> payStrategy = strategyList.stream().filter(strategy -> strategy.match(typeEnum)).findFirst();
-        return payStrategy.get().closeOrder(tradePO);
+        return payStrategy.get().closeOrder(tradePO, source);
     }
 
 }

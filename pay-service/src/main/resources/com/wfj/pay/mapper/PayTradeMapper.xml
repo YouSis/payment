@@ -162,4 +162,14 @@
             AND STATUS = 1
         </where>
     </update>
+
+    <select id="selectByTimeStamp" resultMap="payTradePO">
+        SELECT *
+        FROM (
+            SELECT *
+            FROM PAY_TRADE T
+            WHERE T.CREATE_DATE &gt;= #{beginTimeStamp} AND T.CREATE_DATE &lt;= #{endTimeStamp}
+                  AND T.STATUS = 1)
+        WHERE ROWNUM &lt; 101
+    </select>
 </mapper>

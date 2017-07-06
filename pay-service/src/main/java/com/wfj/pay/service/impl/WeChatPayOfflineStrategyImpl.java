@@ -62,7 +62,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         MyWxPayConfig wxPayConfig = getMyWxPayConfig(payTradeDTO.getPayPartner());
         //1、组织报文
         HashMap<String, String> data = new HashMap<String, String>();
-        data.put("body", payTradeDTO.getGoodsName());
+        data.put("body", "订单号："+payTradeDTO.getGoodsName());
         data.put("out_trade_no", payTradeDTO.getOrderTradeNo());
         data.put("total_fee", String.valueOf(new BigDecimal(String.valueOf(payTradeDTO.getTotalFee())).multiply(
                 new BigDecimal("100")).intValue()));
@@ -116,7 +116,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
     }
 
     @Override
-    public OrderResponseDTO closeOrder(PayTradePO tradePO) {
+    public OrderResponseDTO closeOrder(PayTradePO tradePO,String source) {
         //1、先进行单笔查询，如果是支付成功状态，直接返回错误
         OrderResponseDTO responseDTO = queryOrder(tradePO);
         if ("0".equals(responseDTO.getResultCode()) || "true".equals(responseDTO.getResultMsg())) {
@@ -142,7 +142,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         long endTime = System.currentTimeMillis();
         logger.info("--->订单号为{}的订单调用微信撤销接口的时间为{}毫秒", tradePO.getOrderTradeNo(), endTime - beginTime);
         //3、处理微信返回结果
-        responseDTO = processCloseResponse(resultMap, tradePO.getOrderTradeNo());
+        responseDTO = processCloseResponse(resultMap, tradePO.getOrderTradeNo(),source);
         return responseDTO;
     }
 
@@ -247,7 +247,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         return  responseDTO;
     }
 
-    private OrderResponseDTO processCloseResponse(Map<String, String> resultMap, String orderTradeNo) {
+    private OrderResponseDTO processCloseResponse(Map<String, String> resultMap, String orderTradeNo,String source) {
         OrderResponseDTO orderResponseDTO;
         String returnCode = resultMap.get("return_code");//报文格式是否正确
         String resultCode = resultMap.get("result_code");//业务状态，是否支付成功
@@ -260,7 +260,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         if (WXPayConstants.SUCCESS.equals(resultCode)) {
             orderResponseDTO = new OrderResponseDTO("0", "true", "关闭成功");
             //更新本地的订单状态，记录日志
-            payTradeService.doAfterCloseSuccess(orderTradeNo, PayLogConstant.OPERATE_SOURCE_PERSON);
+            payTradeService.doAfterCloseSuccess(orderTradeNo, source);
         } else {
             //支付失败
             String errCodeDes = resultMap.get("err_code_des");//关闭失败的描述

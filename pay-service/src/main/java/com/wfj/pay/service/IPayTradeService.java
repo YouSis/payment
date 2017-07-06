@@ -6,6 +6,9 @@ import com.wfj.pay.dto.PayNotifyInfoDTO;
 import com.wfj.pay.dto.PayTradeDTO;
 import com.wfj.pay.po.PayTradePO;
 
+import java.sql.Timestamp;
+import java.util.List;
+
 /**
  * Created by wjg on 2017/6/23.
  */
@@ -41,6 +44,14 @@ public interface IPayTradeService {
      * @return
      */
     PayTradePO findByOrderTradeNo(String orderTradeNo);
+
+    /**
+     * 根据时间搓的范围查找未支付的订单列表
+     * @param beginTimeStamp
+     * @param endTimeStamp
+     * @return
+     */
+    List<PayTradePO> findByTime(long beginTimeStamp, long endTimeStamp);
 
     /**
      * 创建订单
@@ -87,5 +98,5 @@ public interface IPayTradeService {
      * @param tradePO
      * @return
      */
-    OrderResponseDTO close(PayTradePO tradePO);
+    OrderResponseDTO close(PayTradePO tradePO,String source);
 }

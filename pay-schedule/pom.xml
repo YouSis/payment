@@ -11,18 +11,22 @@
     <packaging>jar</packaging>
 
     <name>pay-schedule</name>
-    <url>http://maven.apache.org</url>
+    <description>调度服务</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dependency.pay-service-interface.version>1.0-SNAPSHOT</dependency.pay-service-interface.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.wfj.pay</groupId>
+            <artifactId>pay-service-interface</artifactId>
+            <version>${dependency.pay-service-interface.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.dubbo.springboot</groupId>
+            <artifactId>spring-boot-starter-dubbo</artifactId>
         </dependency>
     </dependencies>
 </project>

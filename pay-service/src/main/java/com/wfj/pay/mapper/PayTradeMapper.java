@@ -5,6 +5,7 @@ import com.wfj.pay.po.PayTradePO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -28,4 +29,6 @@ public interface PayTradeMapper {
     void updateOrderAfterPaySuccess(PayTradePO payTradePO);
 
     void updateOrderStatus(@Param("orderTradeNo") String orderTrade,@Param("status") Long status);
+
+    List<PayTradePO> selectByTimeStamp(@Param("beginTimeStamp") long beginTimeStamp, @Param("endTimeStamp") long endTimeStamp);
 }
