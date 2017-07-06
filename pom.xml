@@ -12,6 +12,7 @@
         <module>pay-offline-gateway</module>
         <module>pay-schedule</module>
         <module>pay-syn</module>
+        <module>pay-admin</module>
     </modules>
 
     <packaging>pom</packaging>

@@ -7,7 +7,6 @@ import com.wfj.pay.constant.PayServiceEnum;
 import com.wfj.pay.constant.PayTypeEnum;
 import com.wfj.pay.dto.*;
 import com.wfj.pay.dubbo.IOfflinePayDubbo;
-import com.wfj.pay.dubbo.ITestDubbo;
 import com.wfj.pay.utils.WebUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -21,7 +20,6 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
-import java.util.Arrays;
 import java.util.List;
 
 /**
