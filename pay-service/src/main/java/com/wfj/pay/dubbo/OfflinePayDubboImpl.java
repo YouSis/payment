@@ -53,6 +53,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
+            logger.info("--->返回线下支付的响应:" + JSON.toJSONString(responseDTO));
             return responseDTO;
         }
         //2、创建订单
@@ -76,6 +77,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
+            logger.info("--->返回线下单笔查询的响应:" + JSON.toJSONString(responseDTO));
             return responseDTO;
         }
         //2、发起查询
@@ -98,6 +100,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
+            logger.info("--->返回线下关闭订单的响应:" + JSON.toJSONString(responseDTO));
             return responseDTO;
         }
         //2、发起关闭
@@ -120,6 +123,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
+            logger.info("--->返回线下退款的响应:" + JSON.toJSONString(responseDTO));
             return responseDTO;
         }
         //2、创建退款单
@@ -127,7 +131,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
         //3、发起退款
         responseDTO = refundTradeService.refund(refundTradePO);
         long createRefundEnd = System.currentTimeMillis();
-        logger.info("--->返回线下关闭订单的响应:" + JSON.toJSONString(responseDTO));
+        logger.info("--->返回线下退款的响应:" + JSON.toJSONString(responseDTO));
         logger.info("--->" + (StringUtils.isNotEmpty(refundOrderRequestDTO.getOrderTradeNo())?refundOrderRequestDTO.getOrderTradeNo():refundOrderRequestDTO.getBpOrderId()) + "订单退款请求总耗时：" + (createRefundEnd - createRefundStart) + "ms");
         return responseDTO;
     }
@@ -143,6 +147,7 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             responseDTO.setResultCode("1");
             responseDTO.setResultMsg("false");
             responseDTO.setErrDetail(validateResult.getErrorMessage());
+            logger.info("--->返回线下退款查询的响应:" + JSON.toJSONString(responseDTO));
             return responseDTO;
         }
         //2、发起查询
@@ -234,6 +239,10 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
             return result;
         }
         result = closeTradeRule.orderExistValidate(orderCloseRequestDTO);
+        if (!result.isSuccess()) {
+            return result;
+        }
+        result = closeTradeRule.orderStatusValidate(orderCloseRequestDTO);
         if (!result.isSuccess()) {
             return result;
         }

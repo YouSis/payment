@@ -264,7 +264,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } else {
             //支付失败
             String errCodeDes = resultMap.get("err_code_des");//关闭失败的描述
-            orderResponseDTO = new OrderResponseDTO("1", "false", "请求微信查询失败，" + errCodeDes);
+            orderResponseDTO = new OrderResponseDTO("1", "false", "请求微信撤销失败，" + errCodeDes);
         }
         return orderResponseDTO;
     }
@@ -294,6 +294,9 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
                     break;
                 case WxPayTradeStateConstants.REFUND:
                     orderResponseDTO = new OrderResponseDTO("1", "false", "订单已退款");
+                    break;
+                case WxPayTradeStateConstants.REVOKED:
+                    orderResponseDTO = new OrderResponseDTO("1", "false", "订单已撤销");
                     break;
                 default:
                     orderResponseDTO = new OrderResponseDTO("1", "false", "订单未支付");

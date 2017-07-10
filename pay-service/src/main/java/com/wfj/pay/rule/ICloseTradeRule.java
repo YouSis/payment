@@ -12,4 +12,6 @@ public interface ICloseTradeRule extends IBaseRule {
     RuleResultDTO orderExistValidate(OrderCloseRequestDTO orderCloseRequestDTO);
 
     RuleResultDTO md5Validate(OrderCloseRequestDTO orderCloseRequestDTO);
+
+    RuleResultDTO orderStatusValidate(OrderCloseRequestDTO orderCloseRequestDTO);
 }

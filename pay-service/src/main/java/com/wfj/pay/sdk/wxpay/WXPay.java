@@ -45,7 +45,8 @@ public class WXPay {
             this.signType = SignType.MD5; // 沙箱环境
         }
         else {
-            this.signType = SignType.HMACSHA256;
+            //修改为MD5加密，HMAC-SHA256 撤销接口加密不通过，wjg
+            this.signType = SignType.MD5;
         }
         this.wxPayRequest = new WXPayRequest(config);
     }

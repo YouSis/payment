@@ -233,9 +233,9 @@ public class PayTradeServiceImpl implements IPayTradeService {
     @Override
     public OrderResponseDTO close(PayTradePO tradePO, String source) {
         OrderResponseDTO orderResponseDTO;
-        //1、如果本地已经是支付状态，则不能关闭
-        if (PayTradeStatus.PAYED.equals(tradePO.getStatus())) {
-            orderResponseDTO = new OrderResponseDTO(CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getCode(), "false", CloseOrderErrorEnum.CLOSE_ORDER_ORDER_PAYMENT.getMsg());
+        //1、如果本地已经是关闭状态，直接返回关闭成功
+        if (PayTradeStatus.CANCELED.equals(tradePO.getStatus())) {
+            orderResponseDTO = new OrderResponseDTO("0", "true", "关闭成功");
             return orderResponseDTO;
         }
         //2、如果本地是未支付状态，则调用策略类先查询，如果确实未支付则调用关闭接口
