@@ -37,6 +37,7 @@
         <dependency.hibernate-validator.version>5.4.1.Final</dependency.hibernate-validator.version>
         <dependency.commons-codec.version>1.10</dependency.commons-codec.version>
         <dependency.httpclient.version>4.5.3</dependency.httpclient.version>
+        <dependency.jna.version>3.0.9</dependency.jna.version>
     </properties>
 
     <dependencyManagement>
@@ -96,6 +97,11 @@
                 <artifactId>httpclient</artifactId>
                 <version>${dependency.httpclient.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.sun.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${dependency.jna.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
@@ -127,10 +133,14 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>
