@@ -1,6 +1,8 @@
 package com.wfj.pay.mapper;
 
 import com.wfj.pay.po.PayMerchantPO;
+
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -18,7 +20,7 @@ public interface PayMerchantMapper {
 
     PayMerchantPO selectOne(Map<String, Object> para);
 
-    List<PayMerchantPO> selectAll(Map<String, Object> para);
+    List<PayMerchantPO> selectPage(@Param("id") Long id, @Param("name") String name);
 
     int update(PayMerchantPO payMerchantPO);
 }

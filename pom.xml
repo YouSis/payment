@@ -1,29 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wfj.pay</groupId>
-    <artifactId>pay-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>pay-common</module>
-        <module>pay-service-interface</module>
-        <module>pay-service</module>
-        <module>pay-offline-gateway</module>
-        <module>pay-schedule</module>
-        <module>pay-syn</module>
-        <module>pay-admin</module>
-    </modules>
+	<groupId>com.wfj.pay</groupId>
+	<artifactId>pay-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<modules>
+		<module>pay-common</module>
+		<module>pay-service-interface</module>
+		<module>pay-service</module>
+		<module>pay-offline-gateway</module>
+		<module>pay-schedule</module>
+		<module>pay-syn</module>
+		<module>pay-admin</module>
+	</modules>
 
-    <packaging>pom</packaging>
-    <description>全渠道统一支付平台</description>
-    <name>pay-parent</name>
+	<packaging>pom</packaging>
+	<description>全渠道统一支付平台</description>
+	<name>pay-parent</name>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+	</parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -105,22 +105,22 @@
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
-        </dependency>
-        <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
-        </dependency>
-    </dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+	</dependencies>
 
     <build>
         <plugins>
