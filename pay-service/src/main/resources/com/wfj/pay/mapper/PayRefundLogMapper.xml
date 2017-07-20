@@ -16,4 +16,8 @@
         PAY_REFUND_LOG
         values(S_PAY_REFUND_LOG.NEXTVAL,#{content},#{createDate},#{status},#{orderTradeNo},#{refundTradeNo})
     </insert>
+
+    <select id="selectByRefundTradeNo" resultMap="payRefundLogPO" parameterType="String">
+        SELECT * FROM PAY_REFUND_LOG L WHERE L.refund_trade_no = #{refundTradeNo}
+    </select>
 </mapper>

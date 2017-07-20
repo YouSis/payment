@@ -14,6 +14,7 @@ import com.wfj.pay.sdk.wxpay.MyWxPayConfig;
 import com.wfj.pay.sdk.wxpay.WXPay;
 import com.wfj.pay.sdk.wxpay.WXPayConstants;
 import com.wfj.pay.sdk.wxpay.WxPayTradeStateConstants;
+import com.wfj.pay.service.IPayRefundTradeService;
 import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.service.IWeChatPayService;
@@ -43,11 +44,18 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
     private IPayTradeService payTradeService;
     @Autowired
     private IWeChatPayService weChatPayService;
+    @Autowired
+    private IPayRefundTradeService refundTradeService;
     @Value("${distributed.lock.zk.address}")
     private String distributedLockZKUrl;
     private final ExecutorService executorService = Executors.newFixedThreadPool(30, r -> {
         Thread t = new Thread(r);
         t.setName("wechatpay-query-thread-" + t.getId());
+        return t;
+    });
+    private final ExecutorService sendDataExecutorService = Executors.newFixedThreadPool(20, r -> {
+        Thread t = new Thread(r);
+        t.setName("send-pay-trade-thread-" + t.getId());
         return t;
     });
 
@@ -218,6 +226,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
             }
             //退款成功之后更新退款单的状态
             responseDTO = weChatPayService.doAfterRefundSuccess(resultMap);
+            //发送订单数据MQ
+            sendDataExecutorService.submit(()->refundTradeService.sendPayRefundTradeToMQ(resultMap.get("out_refund_no")));
         } else {
             //退款查询失败
             String errCodeDes = resultMap.get("err_code_des");//关闭失败的描述
@@ -239,6 +249,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         if (WXPayConstants.SUCCESS.equals(resultCode)) {
             //退款成功之后更新退款单的状态
             responseDTO = weChatPayService.doAfterRefundSuccess(resultMap);
+            //发送订单数据MQ
+            sendDataExecutorService.submit(()->refundTradeService.sendPayRefundTradeToMQ(resultMap.get("out_refund_no")));
         } else {
             //支付失败
             String errCodeDes = resultMap.get("err_code_des");//关闭失败的描述
@@ -261,6 +273,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
             orderResponseDTO = new OrderResponseDTO("0", "true", "关闭成功");
             //更新本地的订单状态，记录日志
             payTradeService.doAfterCloseSuccess(orderTradeNo, source);
+            //发送订单数据到MQ
+            payTradeService.sendPayTradeToMQ(orderTradeNo);
         } else {
             //支付失败
             String errCodeDes = resultMap.get("err_code_des");//关闭失败的描述
@@ -291,6 +305,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
                     } finally {
                         zkLock.unlock();
                     }
+                    //发送订单数据MQ
+                    sendDataExecutorService.submit(()->payTradeService.sendPayTradeToMQ(resultMap.get("out_trade_no")));
                     break;
                 case WxPayTradeStateConstants.REFUND:
                     orderResponseDTO = new OrderResponseDTO("1", "false", "订单已退款");
@@ -336,6 +352,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
             } finally {
                 zkLock.unlock();
             }
+            //发送订单数据MQ
+            sendDataExecutorService.submit(()->payTradeService.sendPayTradeToMQ(orderTradeNo));
         } else {
             //支付失败
             String errCode = resultMap.get("err_code");//支付失败的代码

@@ -12,45 +12,51 @@ import java.sql.Timestamp;
  * 
  * 类说明 : 支付订单类.
  */
-public class PayTradePO implements java.io.Serializable {
-	/**
-	 * 序列化版本.
-	 */
-	private static final long serialVersionUID = 130403101548156L;
+@Document(indexName = "pay-data",type = "pay-trade")
+public class PayTradeEsPO implements java.io.Serializable {
+	private static final long serialVersionUID = -7491853205417294059L;
 
 	// Fields
 
 	/**
 	 * 订单ID.
 	 */
+	@Id
 	private Long id;
 	/**
 	 * 订单流水号.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String orderTradeNo;
 	/**
 	 * 支付方式(PayChannelEnum枚举类型).
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payType;
 	/**
 	 * 支付银行（支付方式为网银时有效）.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payBank;
 	/**
 	 * 商品名称.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String goodsName;
 	/**
 	 * 订单备注.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String remark;
 	/**
 	 * 总金额.
 	 */
+	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private Double totalFee;
 	/**
 	 * 订单状态.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long status;
 	/**
 	 * 订单创建时间.
@@ -59,30 +65,37 @@ public class PayTradePO implements java.io.Serializable {
 	/**
 	 * 订单创建时间.
 	 */
+	@Field(type = FieldType.Date,index = FieldIndex.not_analyzed)
 	private Timestamp createDateFormat;
 	/**
 	 * 业务平台ID.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long bpId;
 	/**
 	 * 业务平台订单流水号.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String bpOrderId;
 	/**
 	 * 商品链接地址.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String showUrl;
 	/**
 	 * 订单内容.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String content;
 	/**
 	 * 支付成功显示页面.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String notifyUrl;
 	/**
 	 * 支付成功显示页面.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String returnUrl;
 	/**
 	 * 登录帐号.
@@ -95,109 +108,134 @@ public class PayTradePO implements java.io.Serializable {
 	/**
 	 * 支付成功时间.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long payDate;
 	/**
 	 * 支付成功时间.
 	 */
+	@Field(type = FieldType.Date,index = FieldIndex.not_analyzed)
 	private Timestamp payDateFormat;
 	/**
 	 * 第三方支付平台的交易流水号.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String paySerialNumber;
 	/**
 	 * 订单创建时间月.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long createDateMonth;
 	/**
 	 * 订单创建时间日.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long createDateDay;
 	/**
 	 * 订单创建时间季度.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long createDateQuarter;
 	/**
 	 * 订单支付时间月.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long payDateMonth;
 	/**
 	 * 订单支付时间日.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long payDateDay;
 	/**
 	 * 订单支付时间季度.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long payDateQuarter;
 	/**
 	 * 支付用户在passport的ID.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String unid;
 	/**
 	 * 异步通知第三方的时间.
 	 */
+	@Field(type = FieldType.Date,index = FieldIndex.not_analyzed)
 	private Timestamp notifyDate;
 	/**
 	 * 异步通知的次数.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String notifyNum;
 	/**
 	 * 是否返回成功标识.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String notifyStatus;
 
 	/**
 	 * 业务平台回传参数.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String bpParams;
 
 	/**
 	 * 通知校验ID.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String notifyId;
 
 	/**
 	 * 业务平台订单详情地址.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String orderUrl;
 
 	/**
 	 * 订单初始化终端标识（01:PC端，02:手机端）
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String initOrderTerminal;
 
 	/**
 	 * 订单支付终端标识（01:PC端，02:手机端）
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String finalPayTerminal;
 	/**
 	 * 支付限制.1:RMB或者G宝消费;2:RMB消费;3:G宝消费.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payLimit;
 	/**
 	 * 支付IP.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payIp;
 	/**
 	 * 充值账户ID.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payUnid;
 	/**
 	 * 第三方渠道平台商户ID（支付宝为收款账户email）.
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long payPartner;
 	/**
 	 * 渠道费支出
 	 */
+	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private Double channelFeeCost;
 
 	/**
 	 * 支付服务.用于后端级联下拉查询分类.1:网银直连;2:渠道账户支付;3:手机卡;4:游戏卡;5:移动支付;.
 	 */
+	@Field(type = FieldType.Integer,index = FieldIndex.not_analyzed)
 	private Integer payService;
 
 	/**
 	 * 应付卡金额.
 	 */
+	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private Double needPayPrice;
 
 	/**
@@ -228,89 +266,102 @@ public class PayTradePO implements java.io.Serializable {
 	/**
 	 * 支付货币类型.
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payCurrency;
-	
+
 	/**
 	 * 签约商户编码
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String merCode;
-	
+
 	/**
 	 * OMS商品信息，用于计算费率的促销分摊 格式：0000000000101^99.50^2|0000000000101^18.98^3
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String goodsContent;
 	/**
 	 * 针对OMS的商品的渠道费率的分摊明细
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String channelFeeCostDetail;
 	/**
 	 * 针对OMS的商品的平台（签约商户）的费率总额
 	 */
+	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private Double platformFeeCost;
 	/**
 	 * 针对OMS的商品的平台（签约商户）的费率分摊明细
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String platformFeeCostDetail;
 	/**
 	 * 支付介质编码
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String payMediumCode;
 	/**
 	 * 个人中心用户名
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String username;
 	/**
 	 * 收银员号
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String cashier;
 	/**
 	 * 扫货邦返回的交易号（实际是微信的流水号  退款时用到）
 	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
 	private String transactionId;
 	/**
 	 * 第三方通知支付成功时间
 	 */
+	@Field(type = FieldType.Long,index = FieldIndex.not_analyzed)
 	private Long platformPayDate;
 	/**
 	 * 第三方通知支付成功时间
 	 */
+	@Field(type = FieldType.Date,index = FieldIndex.not_analyzed)
 	private Timestamp platformPayFormat;
 	/**
 	 * 优惠金额
 	 */
+	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private double couponFee;
-	
+
 	// Constructors
 
 	/** default constructor */
-	public PayTradePO() {
+	public PayTradeEsPO() {
 	}
 
 	/** minimal constructor */
-	public PayTradePO(Long id) {
+	public PayTradeEsPO(Long id) {
 		this.id = id;
 	}
 
 	/** full constructor */
-	public PayTradePO(Long id, String orderTradeNo, String payType,
-					  String payBank, String goodsName, String remark, Double totalFee,
-					  Long status, Long createDate, Timestamp createDateFormat,
-					  Long bpId, String bpOrderId, String showUrl, String content,
-					  String notifyUrl, String returnUrl, String account,
-					  String payAccount, Long payDate, Timestamp payDateFormat,
-					  String paySerialNumber, Long createDateMonth, Long createDateDay,
-					  Long createDateQuarter, Long payDateMonth, Long payDateDay,
-					  Long payDateQuarter, String unid, Timestamp notifyDate,
-					  String notifyNum, String notifyStatus, String bpParams,
-					  String notifyId, String orderUrl, String initOrderTerminal,
-					  String finalPayTerminal, String payLimit, String payIp,
-					  String payUnid, Long payPartner, Double channelFeeCost,
-					  Integer payService, Double needPayPrice, Double bargainIncome,
-					  Double realCardPrice, Double realIncome, String nickname,
-					  String payNickname, String payCurrency, String merCode,
-					  String goodsContent, String channelFeeCostDetail,
-					  Double platformFeeCost, String platformFeeCostDetail,
-					  String payMediumCode, String username, String cashier, double couponFee) {
+	public PayTradeEsPO(Long id, String orderTradeNo, String payType,
+                        String payBank, String goodsName, String remark, Double totalFee,
+                        Long status, Long createDate, Timestamp createDateFormat,
+                        Long bpId, String bpOrderId, String showUrl, String content,
+                        String notifyUrl, String returnUrl, String account,
+                        String payAccount, Long payDate, Timestamp payDateFormat,
+                        String paySerialNumber, Long createDateMonth, Long createDateDay,
+                        Long createDateQuarter, Long payDateMonth, Long payDateDay,
+                        Long payDateQuarter, String unid, Timestamp notifyDate,
+                        String notifyNum, String notifyStatus, String bpParams,
+                        String notifyId, String orderUrl, String initOrderTerminal,
+                        String finalPayTerminal, String payLimit, String payIp,
+                        String payUnid, Long payPartner, Double channelFeeCost,
+                        Integer payService, Double needPayPrice, Double bargainIncome,
+                        Double realCardPrice, Double realIncome, String nickname,
+                        String payNickname, String payCurrency, String merCode,
+                        String goodsContent, String channelFeeCostDetail,
+                        Double platformFeeCost, String platformFeeCostDetail,
+                        String payMediumCode, String username, String cashier, double couponFee) {
 		super();
 		this.id = id;
 		this.orderTradeNo = orderTradeNo;

@@ -16,6 +16,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.ObjectUtils;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -58,6 +59,20 @@ public class PayLogServiceImpl implements IPayLogService {
         refundLogPO.setCreateDate(new Timestamp(System.currentTimeMillis()));
         refundLogPO.setStatus(Long.valueOf(status));
         refundLogMapper.insert(refundLogPO);
+    }
+
+    @Override
+    @DataSource("slave")
+    @Transactional
+    public List<PayLogPO> findByOrderTradeNo(String orderTradeNo) {
+        return payLogMapper.selectByOrderTradeNo(orderTradeNo);
+    }
+
+    @Override
+    @DataSource("slave")
+    @Transactional
+    public List<PayRefundLogPO> findByRefundTradeNo(String refundTradeNo) {
+        return refundLogMapper.selectByRefundTradeNo(refundTradeNo);
     }
 
     /**
