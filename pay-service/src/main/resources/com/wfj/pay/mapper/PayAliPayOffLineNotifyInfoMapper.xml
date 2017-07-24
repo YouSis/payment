@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wfj.pay.mapper.PayAliPayOffLineNotifyInfoMapper">
+	<insert id="saveNotifyInfo" parameterType="PayAliPayOffLineNotifyInfoPO">
+		INSERT 
+		INTO 
+		PAY_ALIPAY_OFFLINE_NOTIFY_INFO
+		VALUES(S_ALIPAY_OFFLINE_NOTIFY_INFO.NEXTVAL, 
+		#{out_trade_no, jdbcType=VARCHAR}, #{trade_no, jdbcType=VARCHAR},
+		#{buyer_logon_id, jdbcType=VARCHAR}, #{total_amount},
+		#{receipt_amount}, #{buyer_pay_amount},
+		#{point_amount}, #{invoice_amount},
+		#{gmt_payment, jdbcType=VARCHAR}, #{fund_bill_list, jdbcType=VARCHAR},
+		#{card_balance}, #{store_name, jdbcType=VARCHAR},
+		#{buyer_user_id, jdbcType=VARCHAR}, #{discount_goods_detail, jdbcType=VARCHAR},
+		#{notifyType, jdbcType=VARCHAR}
+		)
+	
+	</insert>
+</mapper>

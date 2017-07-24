@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wfj.pay.mapper.RefundAliOffLineNotifyInfoMapper">
+    <insert id="saveNotifyInfo" parameterType="RefundAliOffLineNotifyInfoPO">
+		INSERT
+		INTO
+		PAY_ALIOF_REFUND_NOTIFY_INFO
+		VALUES 
+		(S_ALIOF_REFUND_NOTIFY_INFO.NEXTVAL, #{out_trade_no, jdbcType=VARCHAR},
+		#{trade_no, jdbcType=VARCHAR}, #{buyer_logon_id, jdbcType=VARCHAR},
+		#{fund_change, jdbcType=VARCHAR}, #{refund_fee},
+		#{gmt_refund_pay, jdbcType=VARCHAR}, #{store_name, jdbcType=VARCHAR},
+		#{buyer_user_id, jdbcType=VARCHAR}, #{send_back_fee, jdbcType=VARCHAR})
+	</insert>
+
+</mapper>

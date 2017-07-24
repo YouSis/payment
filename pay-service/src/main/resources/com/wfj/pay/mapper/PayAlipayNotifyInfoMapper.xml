@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.wfj.pay.mapper.PayAlipayNotifyInfoMapper">
+
+    <insert id="save" parameterType="PayAlipayNotifyInfoPO">
+		INSERT
+		INTO
+		PAY_ALIPAY_NOTIFY_INFO
+		VALUES(S_PAY_ALIPAY_NOTIFY_INFO.NEXTVAL,  #{orderTradeNo,jdbcType=VARCHAR}, #{subject,jdbcType=VARCHAR}, #{paymentType,jdbcType=VARCHAR}, #{exterface,jdbcType=VARCHAR}, #{tradeNo,jdbcType=VARCHAR},
+		#{tradeStatus,jdbcType=VARCHAR},#{notifyId,jdbcType=VARCHAR},#{notifyTime,jdbcType=DATE},#{notifyType,jdbcType=VARCHAR},#{gmtCreate,jdbcType=DATE},#{gmtPayment,jdbcType=DATE},#{gmtClose,jdbcType=DATE},
+		#{sellerEmail,jdbcType=VARCHAR},#{buyerEmail,jdbcType=VARCHAR},#{sellerId,jdbcType=VARCHAR},
+		#{buyerId,jdbcType=VARCHAR},#{totalPrice},#{description,jdbcType=VARCHAR},#{errorCode,jdbcType=VARCHAR},
+		#{bankSeqNo,jdbcType=VARCHAR},#{extraCommonParam,jdbcType=VARCHAR},#{outChannelType,jdbcType=VARCHAR},
+		#{outChannelAmount,jdbcType=VARCHAR},#{outChannelInst,jdbcType=VARCHAR})
+	</insert>
+
+</mapper>
