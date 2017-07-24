@@ -1,27 +1,28 @@
 package com.wfj.pay.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.constant.PayLogConstant;
 import com.wfj.pay.constant.PayRefundTradeStatus;
 import com.wfj.pay.constant.PayTypeEnum;
-import com.wfj.pay.dto.RefundNotifyInfoDTO;
-import com.wfj.pay.dto.RefundOrderQueryRequestDTO;
-import com.wfj.pay.dto.RefundOrderRequestDTO;
-import com.wfj.pay.dto.RefundOrderResponseDTO;
+import com.wfj.pay.dto.*;
 import com.wfj.pay.mapper.PayRefundTradeMapper;
-import com.wfj.pay.po.PayRefundTradePO;
-import com.wfj.pay.po.PayTradePO;
+import com.wfj.pay.po.*;
 import com.wfj.pay.service.IPayLogService;
 import com.wfj.pay.service.IPayRefundTradeService;
 import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
+import com.wfj.pay.utils.MQSendUtil;
 import com.wfj.pay.utils.ObjectUtil;
 import com.wfj.pay.utils.OrderEncryptUtils;
 import com.wfj.pay.utils.StringUtil;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -36,6 +37,7 @@ import java.util.stream.Collectors;
  */
 @Service
 public class PayRefundTradeServiceImpl implements IPayRefundTradeService {
+    private Logger logger = LoggerFactory.getLogger(PayRefundTradeServiceImpl.class);
     @Autowired
     private PayRefundTradeMapper payRefundTradeMapper;
     @Autowired
@@ -44,6 +46,14 @@ public class PayRefundTradeServiceImpl implements IPayRefundTradeService {
     private IPayLogService payLogService;
     @Autowired
     private List<IPayStrategyService> strategyList;
+    @Value("${mq.platformId}")
+    private String platformId;
+    @Value("${mq.serviceId}")
+    private String serviceId;
+    @Value("${mq.refund.destUrl}")
+    private String destUrl;
+    @Value("${mq.mqUrl}")
+    private String mqUrl;
 
     @Override
     @DataSource("slave")
@@ -164,5 +174,30 @@ public class PayRefundTradeServiceImpl implements IPayRefundTradeService {
         PayTypeEnum typeEnum = PayTypeEnum.valueOf(tradePO.getPayType());
         Optional<IPayStrategyService> payStrategy = strategyList.stream().filter(strategy -> strategy.match(typeEnum)).findFirst();
         return payStrategy.get().queryRefundOrder(refundTradePO,tradePO);
+    }
+
+    @Override
+    public void sendPayRefundTradeToMQ(String refundTradeNo) {
+        PayRefundTradePO payRefundTradePO = findPayRefundTradePO(refundTradeNo);
+        PayRefundTradeEsPO refundTradeEsPO = new PayRefundTradeEsPO();
+        BeanUtils.copyProperties(payRefundTradePO,refundTradeEsPO);
+        refundTradeEsPO.setCreateDateTime(payRefundTradePO.getCreateDate());
+        List<PayRefundLogPO> refundLogPOS = payLogService.findByRefundTradeNo(refundTradeNo);
+        List<PayRefundLogEsPO> refundLogEsPOS = refundLogPOS.stream().map(refundLogPO -> {
+            PayRefundLogEsPO refundLogEsPO = new PayRefundLogEsPO();
+            BeanUtils.copyProperties(refundLogPO, refundLogEsPO);
+            refundLogEsPO.setCreateDateTime(refundLogPO.getCreateDate());
+            return refundLogEsPO;
+        }).collect(Collectors.toList());
+        PayRefundDataDTO dataDTO = new PayRefundDataDTO(refundTradeEsPO,refundLogEsPOS);
+        MqBean<PayRefundDataDTO> mqBean = new MqBean<>();
+        mqBean.setData(dataDTO);
+        try {
+            MQSendUtil.sendMsg(platformId,serviceId,destUrl,"http://www.123.com",mqUrl,mqBean,"0","1");
+        } catch (Exception e) {
+            logger.error("发送退款数据到MQ失败："+e.toString(),e);
+            logger.error("发送退款数据到MQ失败的报文数据："+ JSON.toJSONString(dataDTO));
+            //此处应该抛异常到异常框架，人工查看失败原因
+        }
     }
 }

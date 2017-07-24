@@ -90,4 +90,10 @@ public interface IPayRefundTradeService {
      * @return
      */
     RefundOrderResponseDTO refundQuery(RefundOrderQueryRequestDTO refundQueryDTO);
+
+    /**
+     * 发送退款单数据到MQ
+     * @param refundTradeNo
+     */
+    void sendPayRefundTradeToMQ(String refundTradeNo);
 }

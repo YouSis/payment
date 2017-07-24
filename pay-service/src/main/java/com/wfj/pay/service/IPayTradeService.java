@@ -99,4 +99,10 @@ public interface IPayTradeService {
      * @return
      */
     OrderResponseDTO close(PayTradePO tradePO,String source);
+
+    /**
+     * 发送订单数据到MQ
+     * @param orderTradeNo
+     */
+    void sendPayTradeToMQ(String orderTradeNo);
 }

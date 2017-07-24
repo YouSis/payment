@@ -1,29 +1,29 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-    <modelVersion>4.0.0</modelVersion>
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.wfj.pay</groupId>
-    <artifactId>pay-parent</artifactId>
-    <version>1.0-SNAPSHOT</version>
-    <modules>
-        <module>pay-common</module>
-        <module>pay-service-interface</module>
-        <module>pay-service</module>
-        <module>pay-offline-gateway</module>
-        <module>pay-schedule</module>
-        <module>pay-syn</module>
-        <module>pay-admin</module>
-    </modules>
+	<groupId>com.wfj.pay</groupId>
+	<artifactId>pay-parent</artifactId>
+	<version>1.0-SNAPSHOT</version>
+	<modules>
+		<module>pay-common</module>
+		<module>pay-service-interface</module>
+		<module>pay-service</module>
+		<module>pay-offline-gateway</module>
+		<module>pay-schedule</module>
+		<module>pay-syn</module>
+		<module>pay-admin</module>
+	</modules>
 
-    <packaging>pom</packaging>
-    <description>全渠道统一支付平台</description>
-    <name>pay-parent</name>
+	<packaging>pom</packaging>
+	<description>全渠道统一支付平台</description>
+	<name>pay-parent</name>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.5.4.RELEASE</version>
-    </parent>
+	<parent>
+		<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-parent</artifactId>
+		<version>1.5.4.RELEASE</version>
+	</parent>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -37,6 +37,7 @@
         <dependency.hibernate-validator.version>5.4.1.Final</dependency.hibernate-validator.version>
         <dependency.commons-codec.version>1.10</dependency.commons-codec.version>
         <dependency.httpclient.version>4.5.3</dependency.httpclient.version>
+        <dependency.jna.version>3.0.9</dependency.jna.version>
     </properties>
 
     <dependencyManagement>
@@ -96,25 +97,42 @@
                 <artifactId>httpclient</artifactId>
                 <version>${dependency.httpclient.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.sun.jna</groupId>
+                <artifactId>jna</artifactId>
+                <version>${dependency.jna.version}</version>
+            </dependency>
         </dependencies>
     </dependencyManagement>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-web</artifactId>
-        </dependency>
+	<dependencies>
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-web</artifactId>
+		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-starter-test</artifactId>
+			<scope>test</scope>
+		</dependency>
         <dependency>
             <groupId>org.springframework.boot</groupId>
-            <artifactId>spring-boot-starter-test</artifactId>
-            <scope>test</scope>
+            <artifactId>spring-boot-starter-actuator</artifactId>
         </dependency>
         <dependency>
-            <groupId>com.alibaba</groupId>
-            <artifactId>fastjson</artifactId>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-hateoas</artifactId>
         </dependency>
-    </dependencies>
+        <dependency>
+            <groupId>org.springframework.data</groupId>
+            <artifactId>spring-data-rest-hal-browser</artifactId>
+        </dependency>
+		<dependency>
+			<groupId>com.alibaba</groupId>
+			<artifactId>fastjson</artifactId>
+		</dependency>
+	</dependencies>
 
     <build>
         <plugins>
@@ -127,10 +145,14 @@
                     <target>1.8</target>
                 </configuration>
             </plugin>
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
         </plugins>
+        <pluginManagement>
+            <plugins>
+                <plugin>
+                    <groupId>org.springframework.boot</groupId>
+                    <artifactId>spring-boot-maven-plugin</artifactId>
+                </plugin>
+            </plugins>
+        </pluginManagement>
     </build>
 </project>

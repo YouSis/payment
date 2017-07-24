@@ -17,4 +17,7 @@
         VALUES(S_PAY_LOG.NEXTVAL,  #{content,jdbcType=VARCHAR}, #{createDate}, #{status,jdbcType=VARCHAR}, #{orderTradeNo,jdbcType=VARCHAR}, #{ownPlatform,jdbcType=VARCHAR})
     </insert>
 
+    <select id="selectByOrderTradeNo" resultMap="payLogPO" parameterType="String">
+        SELECT * FROM PAY_LOG L WHERE L.ORDER_TRADE_NO=#{orderTradeNo}
+    </select>
 </mapper>

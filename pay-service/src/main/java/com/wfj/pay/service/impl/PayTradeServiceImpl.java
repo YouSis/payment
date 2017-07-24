@@ -1,28 +1,28 @@
 package com.wfj.pay.service.impl;
 
+import com.alibaba.fastjson.JSON;
 import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.cache.PayCacheHandle;
-import com.wfj.pay.constant.*;
-import com.wfj.pay.dto.OrderRequestDTO;
-import com.wfj.pay.dto.OrderResponseDTO;
-import com.wfj.pay.dto.PayNotifyInfoDTO;
-import com.wfj.pay.dto.PayTradeDTO;
+import com.wfj.pay.constant.PayLogConstant;
+import com.wfj.pay.constant.PayTradeStatus;
+import com.wfj.pay.constant.PayTypeEnum;
+import com.wfj.pay.constant.TradeStatusConstant;
+import com.wfj.pay.dto.*;
 import com.wfj.pay.mapper.PayChannelMapper;
 import com.wfj.pay.mapper.PaySequencesMapper;
 import com.wfj.pay.mapper.PayTradeMapper;
-import com.wfj.pay.po.PayChannelPO;
-import com.wfj.pay.po.PayTradePO;
+import com.wfj.pay.po.*;
 import com.wfj.pay.service.IPayLogService;
 import com.wfj.pay.service.IPayRefundTradeService;
 import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
-import com.wfj.pay.utils.CalendarUtil;
-import com.wfj.pay.utils.ObjectUtil;
-import com.wfj.pay.utils.OrderEncryptUtils;
-import com.wfj.pay.utils.StringUtil;
+import com.wfj.pay.utils.*;
 import org.apache.commons.lang3.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -32,12 +32,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /**
  * Created by wjg on 2017/6/23.
  */
 @Service
 public class PayTradeServiceImpl implements IPayTradeService {
+    private Logger logger = LoggerFactory.getLogger(PayTradeServiceImpl.class);
     private static final SimpleDateFormat DAY_FORMAT = new SimpleDateFormat("yyyyMMdd");
     private static final SimpleDateFormat MONTH_FORMAT = new SimpleDateFormat("yyyyMM");
     @Autowired
@@ -52,6 +54,14 @@ public class PayTradeServiceImpl implements IPayTradeService {
     private List<IPayStrategyService> strategyList;
     @Autowired
     private IPayRefundTradeService refundTradeService;
+    @Value("${mq.platformId}")
+    private String platformId;
+    @Value("${mq.serviceId}")
+    private String serviceId;
+    @Value("${mq.trade.destUrl}")
+    private String destUrl;
+    @Value("${mq.mqUrl}")
+    private String mqUrl;
 
     @Override
     @DataSource("slave")
@@ -242,6 +252,31 @@ public class PayTradeServiceImpl implements IPayTradeService {
         PayTypeEnum typeEnum = PayTypeEnum.valueOf(tradePO.getPayType());
         Optional<IPayStrategyService> payStrategy = strategyList.stream().filter(strategy -> strategy.match(typeEnum)).findFirst();
         return payStrategy.get().closeOrder(tradePO, source);
+    }
+
+    @Override
+    public void sendPayTradeToMQ(String orderTradeNo) {
+        PayTradePO payTradePO = findByOrderTradeNo(orderTradeNo);
+        PayTradeEsPO payTradeEsPO = new PayTradeEsPO();
+        BeanUtils.copyProperties(payTradePO,payTradeEsPO);
+        List<PayLogPO> payLogPOList = payLogService.findByOrderTradeNo(orderTradeNo);
+        List<PayLogEsPO> payLogEsPOS = payLogPOList.stream().map(payLogPO -> {
+            PayLogEsPO logEsPO = new PayLogEsPO();
+            BeanUtils.copyProperties(payLogPO, logEsPO);
+            logEsPO.setCreateDateTime(payLogPO.getCreateDate());
+            logEsPO.setStatus(Long.valueOf(payLogPO.getStatus()));
+            return logEsPO;
+        }).collect(Collectors.toList());
+        PayDataDTO dataDTO = new PayDataDTO(payTradeEsPO,payLogEsPOS);
+        MqBean<PayDataDTO> mqBean = new MqBean<>();
+        mqBean.setData(dataDTO);
+        try {
+            MQSendUtil.sendMsg(platformId,serviceId,destUrl,"http://www.123.com",mqUrl,mqBean,"0","1");
+        } catch (Exception e) {
+            logger.error("发送订单数据到MQ失败："+e.toString(),e);
+            logger.error("发送订单数据到MQ失败的报文数据："+ JSON.toJSONString(dataDTO));
+            //此处应该抛异常到异常框架，人工查看失败原因
+        }
     }
 
 }

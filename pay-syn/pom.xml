@@ -11,18 +11,31 @@
     <packaging>jar</packaging>
 
     <name>pay-syn</name>
-    <url>http://maven.apache.org</url>
+    <description>订单同步到elasticsearch服务</description>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <dependency.pay-common.version>1.0-SNAPSHOT</dependency.pay-common.version>
     </properties>
 
     <dependencies>
         <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>3.8.1</version>
-            <scope>test</scope>
+            <groupId>com.wfj.pay</groupId>
+            <artifactId>pay-common</artifactId>
+            <version>${dependency.pay-common.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-elasticsearch</artifactId>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 </project>
