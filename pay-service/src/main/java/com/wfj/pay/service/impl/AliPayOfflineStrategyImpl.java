@@ -8,6 +8,7 @@ import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.*;
 import com.alipay.api.response.*;
 import com.wfj.pay.cache.PayCacheHandle;
+import com.wfj.pay.constant.PayTradeStatus;
 import com.wfj.pay.constant.PayTypeEnum;
 import com.wfj.pay.constant.SceneEnum;
 import com.wfj.pay.dto.OrderResponseDTO;
@@ -16,9 +17,14 @@ import com.wfj.pay.dto.RefundOrderResponseDTO;
 import com.wfj.pay.po.PayPartnerAccountPO;
 import com.wfj.pay.po.PayRefundTradePO;
 import com.wfj.pay.po.PayTradePO;
-import com.wfj.pay.sdk.alipay.*;
+import com.wfj.pay.sdk.alipay.AliPayConfig;
+import com.wfj.pay.sdk.alipay.AliPayConstants;
+import com.wfj.pay.sdk.alipay.AliPayInterface;
+import com.wfj.pay.sdk.alipay.NotifyTradeStatus;
 import com.wfj.pay.service.IAliPayService;
+import com.wfj.pay.service.IPayRefundTradeService;
 import com.wfj.pay.service.IPayStrategyService;
+import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.utils.DistributedLock;
 import com.wfj.pay.utils.JsonUtil;
 import org.slf4j.Logger;
@@ -29,6 +35,9 @@ import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 
 /**
  * Created by kongqf on 2017/7/5.
@@ -41,6 +50,22 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
     private String distributedLockZKUrl;
     @Autowired
     private IAliPayService aliPayService;
+    @Autowired
+    private IPayTradeService payTradeService;
+    @Autowired
+    private IPayRefundTradeService refundTradeService;
+
+    private final ExecutorService executorService = Executors.newFixedThreadPool(30, r -> {
+        Thread t = new Thread(r);
+        t.setName("alipay-query-thread-" + t.getId());
+        return t;
+    });
+
+    private final ExecutorService sendDataExecutorService = Executors.newFixedThreadPool(20, r -> {
+        Thread t = new Thread(r);
+        t.setName("send-pay-trade-thread-" + t.getId());
+        return t;
+    });
 
     @Override
     public boolean match(PayTypeEnum payTypeEnum) {
@@ -73,7 +98,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         long endTime = System.currentTimeMillis();
         logger.info("--->订单号为{}的订单请求支付宝下单的时间为{}毫秒", payTradeDTO.getOrderTradeNo(), endTime - beginTime);
         //3、处理支付宝返回的结果
-        responseDTO = processResponse(response, aliPayConfig);
+        responseDTO = processResponse(response, payTradeDTO.getOrderTradeNo());
         return responseDTO;
     }
 
@@ -107,7 +132,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         logger.info("--->订单号为{}的订单单笔查询支付宝的时间为{}毫秒", payTradePO.getOrderTradeNo(), endTime - beginTime);
 
         //3、处理支付宝返回的结果
-        responseDTO = processQueryResponse(response, aliPayConfig);
+        responseDTO = processQueryResponse(response);
         return responseDTO;
     }
 
@@ -120,7 +145,6 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             return responseDTO;
         }
         //2、如果是未支付，调用支付宝关闭接口
-        OrderResponseDTO orderResponseDTO;
         AliPayConfig aliPayConfig = getAliPayConfig(tradePO.getPayPartner());
         AlipayClient alipayClient = getAliPayClient(aliPayConfig);
         //1、组织查询报文
@@ -138,6 +162,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             e.printStackTrace();
             logger.error("调用支付宝关闭失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求支付宝撤销失败，请重试");
+            return responseDTO;
         }
         long endTime = System.currentTimeMillis();
         logger.info("--->订单号为{}的订单调用支付宝撤销接口的时间为{}毫秒", tradePO.getOrderTradeNo(), endTime - beginTime);
@@ -202,7 +227,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         AlipayTradeFastpayRefundQueryResponse response = null;
         try {
             response = alipayClient.execute(request);
-            logger.info("调用退款查询返回结果："+JSON.toJSONString(response));
+            logger.info("调用退款查询返回结果：" + JSON.toJSONString(response));
         } catch (AlipayApiException e) {
             logger.error("调用支付宝退款查询接口失败:" + e.toString(), e);
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款查询失败，请重试");
@@ -220,10 +245,9 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
      * 处理支付宝查询返回的结果
      *
      * @param response
-     * @param aliPayConfig
      * @return
      */
-    private OrderResponseDTO processQueryResponse(AlipayTradeQueryResponse response, AliPayConfig aliPayConfig) {
+    private OrderResponseDTO processQueryResponse(AlipayTradeQueryResponse response) {
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
         if (response == null || !AliPayConstants.SUCCESS.equals(response.getCode())) {
             orderResponseDTO = new OrderResponseDTO("1", "false", "请求支付宝查询失败，参数错误，请重试");
@@ -239,6 +263,8 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             } finally {
                 zkLock.unlock();
             }
+            //发送订单数据MQ
+            sendDataExecutorService.submit(() -> payTradeService.sendPayTradeToMQ(response.getOutTradeNo()));
         } else if (NotifyTradeStatus.TRADE_CLOSED.getStatus().equals(response.getTradeStatus())) {
             orderResponseDTO = new OrderResponseDTO("1", "false", "该订单已关闭或已退款");
             return orderResponseDTO;
@@ -259,20 +285,49 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
      * @param response
      * @return
      */
-    private OrderResponseDTO processResponse(AlipayTradePayResponse response, AliPayConfig aliPayConfig) {
+    private OrderResponseDTO processResponse(AlipayTradePayResponse response, String orderTradeNo) {
         OrderResponseDTO orderResponseDTO = new OrderResponseDTO();
-        if (response == null || !AliPayConstants.SUCCESS.equals(response.getCode())) {
+        if (response == null) {
             orderResponseDTO = new OrderResponseDTO("1", "false", "请求支付宝支付失败，参数错误，请重试");
             return orderResponseDTO;
         }
 
         //支付成功
-        DistributedLock zkLock = new DistributedLock(distributedLockZKUrl, response.getOutTradeNo());
-        zkLock.lock();
-        try {
-            orderResponseDTO = aliPayService.doAfterAliSuccess(response.getBody(), AliPayInterface.AlipayTrade_Pay);
-        } finally {
-            zkLock.unlock();
+        if (AliPayConstants.SUCCESS.equals(response.getCode())) {
+            DistributedLock zkLock = new DistributedLock(distributedLockZKUrl, response.getOutTradeNo());
+            zkLock.lock();
+            try {
+                orderResponseDTO = aliPayService.doAfterAliSuccess(response.getBody(), AliPayInterface.AlipayTrade_Pay);
+            } finally {
+                zkLock.unlock();
+            }
+            //发送订单数据MQ
+            sendDataExecutorService.submit(() -> payTradeService.sendPayTradeToMQ(orderTradeNo));
+        } else {
+            if (AliPayConstants.PAYING.equals(response.getCode())) {
+                orderResponseDTO = new OrderResponseDTO("0", "false", response.getMsg());
+                //开启线程进行轮训微信
+                Future<?> future = executorService.submit(() -> {
+                    for (int i = 0; i < 6; i++) {
+                        // 睡眠一定时间后再查询 总共查6次，中间间隔5s
+                        try {
+                            Thread.sleep(7500);
+                        } catch (InterruptedException e) {
+                            logger.error(e.toString(), e);
+                        }
+                        PayTradePO tradePO = payTradeService.findByOrderTradeNo(orderTradeNo);
+                        if (PayTradeStatus.PAYED.equals(tradePO.getStatus())) {
+                            break;
+                        }
+                        OrderResponseDTO responseDTO = queryOrder(tradePO);
+                        if ("0".equals(responseDTO.getResultCode()) && "true".equals(responseDTO.getResultMsg())) {
+                            break;
+                        }
+                    }
+                });
+            } else {
+                orderResponseDTO = new OrderResponseDTO("1", "false", "请求支付宝支付失败，" + response.getSubCode());
+            }
         }
 
         return orderResponseDTO;
@@ -280,57 +335,69 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
 
     private RefundOrderResponseDTO processRefundResponse(AlipayTradeRefundResponse response, AliPayConfig aliPayConfig, PayRefundTradePO refundTradePO) {
         RefundOrderResponseDTO responseDTO;
-        if (response == null || !AliPayConstants.SUCCESS.equals(response.getCode())) {
+        if (response == null) {
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款失败，参数错误，请重试");
             return responseDTO;
         }
 
-        Map<String, String> responseMap = JsonUtil.string2Map(response.getBody());
-        String reslut = responseMap.get(AliPayInterface.AlipayTrade_Refund.getMethod());
-        Map<String, String> resultMap = JsonUtil.string2Map(reslut);
-        resultMap.put("out_refund_no", refundTradePO.getRefundTradeNo());
-
         //退款成功
-       /* DistributedLock zkLock = new DistributedLock(distributedLockZKUrl, response.getOutTradeNo());
-        zkLock.lock();
-        try {*/
+        if (AliPayConstants.SUCCESS.equals(response.getCode())) {
+            Map<String, String> responseMap = JsonUtil.string2Map(response.getBody());
+            String reslut = responseMap.get(AliPayInterface.AlipayTrade_Refund.getMethod());
+            Map<String, String> resultMap = JsonUtil.string2Map(reslut);
+            resultMap.put("out_refund_no", refundTradePO.getRefundTradeNo());
             responseDTO = aliPayService.doAfterRefundSuccess(resultMap);
-      /*  } finally {
-            zkLock.unlock();
-        }*/
+
+            //发送订单数据MQ
+            sendDataExecutorService.submit(() -> refundTradeService.sendPayRefundTradeToMQ(resultMap.get("out_refund_no")));
+        } else {
+            responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款失败，" + response.getSubCode());
+        }
         return responseDTO;
     }
 
     private RefundOrderResponseDTO processRefundQueryResponse(AlipayTradeFastpayRefundQueryResponse response, PayRefundTradePO refundTradePO) {
         RefundOrderResponseDTO responseDTO;
         //1、先判断请求是否成功
-        if (response == null || !AliPayConstants.SUCCESS.equals(response.getCode())) {
+        if (response == null) {
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款查询失败，参数错误，请重试");
             return responseDTO;
         }
-        Map<String, String> responseMap = JsonUtil.string2Map(response.getBody());
-        String reslut = responseMap.get(AliPayInterface.AlipayTrade_FastpayRefundQuery.getMethod());
-        Map<String, String> resultMap = JsonUtil.string2Map(reslut);
-        resultMap.put("out_refund_no", refundTradePO.getRefundTradeNo());
 
         //退款查询成功
-        responseDTO = aliPayService.doAfterRefundSuccess(resultMap);
+        if (AliPayConstants.SUCCESS.equals(response.getCode())) {
+            Map<String, String> responseMap = JsonUtil.string2Map(response.getBody());
+            String reslut = responseMap.get(AliPayInterface.AlipayTrade_FastpayRefundQuery.getMethod());
+            Map<String, String> resultMap = JsonUtil.string2Map(reslut);
+            resultMap.put("out_refund_no", refundTradePO.getRefundTradeNo());
 
+            responseDTO = aliPayService.doAfterRefundSuccess(resultMap);
+            //发送订单数据MQ
+            sendDataExecutorService.submit(() -> refundTradeService.sendPayRefundTradeToMQ(resultMap.get("out_refund_no")));
+        } else {
+            responseDTO = new RefundOrderResponseDTO("1", "false", "退款失败，" + response.getSubCode());
+        }
         return responseDTO;
     }
 
     private OrderResponseDTO processCloseResponse(AlipayTradeCloseResponse response, String source) {
         OrderResponseDTO orderResponseDTO;
         //1、先判断请求是否成功
-        if (response == null || !AliPayConstants.SUCCESS.equals(response.getCode())) {
+        if (response == null) {
             orderResponseDTO = new OrderResponseDTO("1", "false", "请求支付宝撤销订单失败，参数错误，请重试");
             return orderResponseDTO;
         }
         //2、判断业务状态
-        orderResponseDTO = new OrderResponseDTO("0", "true", "关闭成功");
-        //更新本地的订单状态，记录日志
-        aliPayService.doAfterCloseSuccess(response.getOutTradeNo(), source);
-
+        if (AliPayConstants.SUCCESS.equals(response.getCode())) {
+            orderResponseDTO = new OrderResponseDTO("0", "true", "关闭成功");
+            //更新本地的订单状态，记录日志
+            aliPayService.doAfterCloseSuccess(response.getOutTradeNo(), source);
+            //发送订单数据到MQ
+            payTradeService.sendPayTradeToMQ(response.getOutTradeNo());
+        } else {
+            //支付失败
+            orderResponseDTO = new OrderResponseDTO("1", "false", "请求支付宝撤销订单失败，" + response.getSubCode());
+        }
         return orderResponseDTO;
     }
 
