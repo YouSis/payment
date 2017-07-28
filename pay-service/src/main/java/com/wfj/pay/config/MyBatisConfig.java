@@ -1,6 +1,8 @@
 package com.wfj.pay.config;
 
 import com.alibaba.druid.pool.DruidDataSource;
+import com.wfj.netty.servlet.handler.factory.SpringDataSourceFactoryBean;
+import com.wfj.netty.servlet.handler.spring.SpringDataSourceBeanPostProcessor;
 import com.wfj.pay.aspect.ChooseDataSource;
 import com.wfj.pay.aspect.HandleDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
@@ -33,7 +35,7 @@ public class MyBatisConfig implements EnvironmentAware {
     /**
      * 写数据源
      *
-     * @return
+     * @return DruidDataSource
      */
     @Bean(initMethod = "init", destroyMethod = "close")
     public DruidDataSource masterDataSource() {
@@ -59,7 +61,7 @@ public class MyBatisConfig implements EnvironmentAware {
     /**
      * 读数据源
      *
-     * @return
+     * @return DruidDataSource
      */
     @Bean(initMethod = "init", destroyMethod = "close")
     public DruidDataSource slaveDataSource() {
@@ -116,6 +118,25 @@ public class MyBatisConfig implements EnvironmentAware {
     @Bean
     public DataSourceTransactionManager transactionManager(ChooseDataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
+    }
+
+    /**
+     * sql数据源监控配置
+     * @return SpringDataSourceBeanPostProcessor
+     */
+    @Bean
+    public SpringDataSourceBeanPostProcessor springDataSourceBeanPostProcessor(){
+        return new SpringDataSourceBeanPostProcessor();
+    }
+    /**
+     * sql数据源监控配置
+     * @return SpringDataSourceFactoryBean
+     */
+    @Bean
+    public SpringDataSourceFactoryBean wrappedDataSource(){
+        SpringDataSourceFactoryBean dataSourceFactoryBean = new SpringDataSourceFactoryBean();
+        dataSourceFactoryBean.setTargetName("dataSource");
+        return dataSourceFactoryBean;
     }
 
 }
