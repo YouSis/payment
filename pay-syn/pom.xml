@@ -31,6 +31,7 @@
     </dependencies>
 
     <build>
+        <finalName>pay-timing</finalName>
         <filters>
             <filter>src/main/resources-${resources.active}/env-profile.properties</filter>
         </filters>
