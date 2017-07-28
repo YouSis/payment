@@ -16,6 +16,7 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.core.env.Environment;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
 
+import javax.sql.DataSource;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -86,8 +87,8 @@ public class MyBatisConfig implements EnvironmentAware {
 
     @Bean
     @Primary
-    public ChooseDataSource dataSource(@Qualifier("masterDataSource") DruidDataSource masterDataSource,
-                                       @Qualifier("slaveDataSource") DruidDataSource slaveDataSource) {
+    public DataSource dataSource(@Qualifier("masterDataSource") DataSource masterDataSource,
+                                       @Qualifier("slaveDataSource") DataSource slaveDataSource) {
         Map<Object, Object> targetDataSources = new HashMap<>();
         targetDataSources.put(HandleDataSource.MASTER_DS,masterDataSource);
         targetDataSources.put(HandleDataSource.SLAVE_DS,slaveDataSource);
@@ -108,7 +109,7 @@ public class MyBatisConfig implements EnvironmentAware {
     }
 
     @Bean
-    public SqlSessionFactory sqlSessionFactory(ChooseDataSource dataSource) throws Exception {
+    public SqlSessionFactory sqlSessionFactory(DataSource dataSource) throws Exception {
         SqlSessionFactoryBean factoryBean = new SqlSessionFactoryBean();
         factoryBean.setDataSource(dataSource);
         factoryBean.setTypeAliasesPackage(env.getProperty("mybatis.type-aliases-package"));
@@ -116,7 +117,7 @@ public class MyBatisConfig implements EnvironmentAware {
     }
 
     @Bean
-    public DataSourceTransactionManager transactionManager(ChooseDataSource dataSource){
+    public DataSourceTransactionManager transactionManager(DataSource dataSource){
         return new DataSourceTransactionManager(dataSource);
     }
 
