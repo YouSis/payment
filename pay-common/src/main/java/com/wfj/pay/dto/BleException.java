@@ -1,4 +1,6 @@
-package com.wfj.pay.framework.exception;
+package com.wfj.pay.dto;
+
+import com.wfj.pay.constant.ErrorCodeEnum;
 
 /**
  * Created by kongqf on 2017/7/25.
@@ -23,6 +25,12 @@ public class BleException extends RuntimeException {
     public BleException(String code, String message, String errLever) {
         super(message);
         this.code = code;
+        this.errLever = errLever;
+    }
+
+    public BleException(ErrorCodeEnum errorCodeEnum, String errLever) {
+        super(errorCodeEnum.getErrorCodeDes());
+        this.code = errorCodeEnum.getErrorCode();
         this.errLever = errLever;
     }
 
