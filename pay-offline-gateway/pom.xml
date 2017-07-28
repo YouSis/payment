@@ -39,8 +39,22 @@
             <artifactId>hibernate-validator</artifactId>
         </dependency>
     </dependencies>
-
     <build>
+        <filters>
+            <filter>src/main/resources-${resources.active}/env-profile.properties</filter>
+        </filters>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/resources-${resources.active}</directory>
+                <excludes>
+                    <exclude>env-profile.properties</exclude>
+                </excludes>
+            </resource>
+        </resources>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
