@@ -55,6 +55,7 @@
                 </excludes>
             </resource>
         </resources>
+        <finalName>wfjpay-inner</finalName>
         <plugins>
             <plugin>
                 <groupId>org.springframework.boot</groupId>
