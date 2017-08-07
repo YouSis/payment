@@ -29,15 +29,15 @@ public class OrderEncryptUtils {
     public final static String[] CREATE_ORDER_MD5_PARAMS = {"bpId",
             "bpOrderId", "goodsName", "totalFee", "content", "remark",
             "initOrderTerminal", "antiPhishingKey", "merCode", "goodsContent",
-            "cashier", "authCode", "payType", "payService"};
+            "cashier", "authCode", "payType", "payService","sign"};
     /**
      * 参与关闭订单的加密参数数组
      */
-    public final static String[] CLOSE_ORDER_MD5_PARAMS ={"bpId","bpOrderId","orderTradeNo","antiPhishingKey"};
+    public final static String[] CLOSE_ORDER_MD5_PARAMS ={"bpId","bpOrderId","orderTradeNo","antiPhishingKey","sign"};
     /**
-     * 参与创建爱你退款单的参数数组
+     * 参与创建退款单的参数数组
      */
-    public final static String[] CREATE_REFUND_ORDER_MD5_PARAMS={"bpId","bpOrderId","orderTradeNo","antiPhishingKey","bpRefundOrderId","payType","refundFee"};
+    public final static String[] CREATE_REFUND_ORDER_MD5_PARAMS={"bpId","bpOrderId","orderTradeNo","antiPhishingKey","bpRefundOrderId","payType","refundFee","sign"};
     /**
      * 根据接口参数和业务平台秘钥获取加密参数
      *
