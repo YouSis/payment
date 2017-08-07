@@ -27,6 +27,7 @@ import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.utils.DistributedLock;
 import com.wfj.pay.utils.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -414,14 +415,18 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         paramMap.put("scene", SceneEnum.BarCode.getType());
         paramMap.put("auth_code", payTradeDTO.getAuthCode());
         paramMap.put("total_amount", String.valueOf(payTradeDTO.getTotalFee()));
-        // paramMap.put("subject", "2609-" + order.getGoodsName());
-        paramMap.put("subject", payTradeDTO.getGoodsName());
+        paramMap.put("subject", "订单号："+payTradeDTO.getGoodsName());
         paramMap.put("body", payTradeDTO.getContent());
         paramMap.put("operator_id", payTradeDTO.getCashier());
-        paramMap.put("store_id", payTradeDTO.getMerCode());
+        PayPartnerAccountPO payPartnerAccout = PayCacheHandle.getPayPartnerAccout(payTradeDTO.getPayPartner());
+        //针对开通支付宝口碑门店的特殊处理逻辑
+        if(StringUtils.isNotEmpty(payPartnerAccout.getStoreId())){
+            paramMap.put("alipay_store_id", payPartnerAccout.getStoreId());
+        }else{
+            paramMap.put("store_id", payTradeDTO.getMerCode());
+        }
         paramMap.put("terminal_id", payTradeDTO.getBpOrderId().substring(0, 3));
         paramMap.put("timeout_express", "90m");
-
         return paramMap;
     }
 

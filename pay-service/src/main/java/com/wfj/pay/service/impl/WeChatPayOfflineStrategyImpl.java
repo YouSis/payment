@@ -69,7 +69,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         OrderResponseDTO responseDTO;
         MyWxPayConfig wxPayConfig = getMyWxPayConfig(payTradeDTO.getPayPartner());
         //1、组织报文
-        HashMap<String, String> data = new HashMap<String, String>();
+        HashMap<String, String> data = new HashMap<>();
         data.put("body", "订单号："+payTradeDTO.getGoodsName());
         data.put("out_trade_no", payTradeDTO.getOrderTradeNo());
         data.put("total_fee", String.valueOf(new BigDecimal(String.valueOf(payTradeDTO.getTotalFee())).multiply(
@@ -330,8 +330,8 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
     /**
      * 处理微信支付返回的结果
      *
-     * @param resultMap
-     * @return
+     * @param resultMap 微信支付返回的map
+     * @return OrderResponseDTO
      */
     private OrderResponseDTO processResponse(Map<String, String> resultMap,String orderTradeNo) {
         OrderResponseDTO orderResponseDTO;
@@ -390,7 +390,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
      * 根据不同的商户号码获取不同的微信配置类
      *
      * @param payPartnerAccoutId
-     * @return
+     * @return MyWxPayConfig
      */
     private MyWxPayConfig getMyWxPayConfig(Long payPartnerAccoutId) {
         PayPartnerAccountPO payPartnerAccout = PayCacheHandle.getPayPartnerAccout(payPartnerAccoutId);
