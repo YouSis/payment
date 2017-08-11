@@ -1,6 +1,7 @@
 package com.wfj.pay.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance;
 import com.alibaba.fastjson.JSON;
 import com.wfj.pay.constant.PayOrderTerminalEnum;
 import com.wfj.pay.constant.PayServiceEnum;

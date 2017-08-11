@@ -17,7 +17,7 @@ public class PayTradeCloseTask {
     @Reference(version = "1.0.0", cluster = "failfast")
     private IPayScheduleDubbo payScheduleDubbo;
 
-    @Scheduled(cron = "0 */1 * * * ?")
+    @Scheduled(cron = "0 0 */1 * * ?")
     public void tradeColse(){
         logger.info("--->启动任务,开始调用关闭超时订单的服务...");
         try{

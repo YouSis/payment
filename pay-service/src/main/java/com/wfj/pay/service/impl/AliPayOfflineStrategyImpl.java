@@ -425,7 +425,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         }else{
             paramMap.put("store_id", payTradeDTO.getMerCode());
         }
-        paramMap.put("terminal_id", payTradeDTO.getBpOrderId().substring(0, 3));
+        paramMap.put("terminal_id", payTradeDTO.getBpOrderId().substring(0, 4));
         paramMap.put("timeout_express", "90m");
         return paramMap;
     }

@@ -8,7 +8,10 @@ import com.wfj.pay.dto.MqBean;
 import com.wfj.pay.dto.PayDataDTO;
 import com.wfj.pay.dto.PayRefundDataDTO;
 import com.wfj.pay.service.IPayDataService;
+import org.elasticsearch.index.query.QueryBuilders;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.elasticsearch.core.query.NativeSearchQueryBuilder;
+import org.springframework.data.elasticsearch.core.query.SearchQuery;
 import org.springframework.stereotype.Service;
 
 /**

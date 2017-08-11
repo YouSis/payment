@@ -168,14 +168,14 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
      */
     private RuleResultDTO validate(OrderRequestDTO orderRequestDTO) {
         RuleResultDTO result;
-        result = createTradeRule.antiPhishingValidate(orderRequestDTO.getAntiPhishingKey());
-        if (!result.isSuccess()) {
-            return result;
-        }
-        result = createTradeRule.md5Validate(orderRequestDTO);
-        if (!result.isSuccess()) {
-            return result;
-        }
+        //result = createTradeRule.antiPhishingValidate(orderRequestDTO.getAntiPhishingKey());
+        //if (!result.isSuccess()) {
+        //    return result;
+        //}
+        //result = createTradeRule.md5Validate(orderRequestDTO);
+        //if (!result.isSuccess()) {
+        //    return result;
+        //}
         result = createTradeRule.bpIdValidate(orderRequestDTO.getBpId());
         if (!result.isSuccess()) {
             return result;
@@ -226,14 +226,14 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
      */
     private RuleResultDTO validateClose(OrderCloseRequestDTO orderCloseRequestDTO) {
         RuleResultDTO result;
-        result = closeTradeRule.antiPhishingValidate(orderCloseRequestDTO.getAntiPhishingKey());
-        if (!result.isSuccess()) {
-            return result;
-        }
-        result = closeTradeRule.md5Validate(orderCloseRequestDTO);
-        if (!result.isSuccess()) {
-            return result;
-        }
+        //result = closeTradeRule.antiPhishingValidate(orderCloseRequestDTO.getAntiPhishingKey());
+        //if (!result.isSuccess()) {
+        //    return result;
+        //}
+        //result = closeTradeRule.md5Validate(orderCloseRequestDTO);
+        //if (!result.isSuccess()) {
+        //    return result;
+        //}
         result = closeTradeRule.bpIdValidate(orderCloseRequestDTO.getBpId());
         if (!result.isSuccess()) {
             return result;
@@ -256,14 +256,14 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
      */
     private RuleResultDTO validateCreateRefund(RefundOrderRequestDTO refundOrderRequestDTO) {
         RuleResultDTO result;
-       result = createRefundTradeRule.antiPhishingValidate(refundOrderRequestDTO.getAntiPhishingKey());
-        if (!result.isSuccess()) {
-            return result;
-        }
-        result = createRefundTradeRule.md5Validate(refundOrderRequestDTO);
-        if (!result.isSuccess()) {
-            return result;
-        }
+       //result = createRefundTradeRule.antiPhishingValidate(refundOrderRequestDTO.getAntiPhishingKey());
+       // if (!result.isSuccess()) {
+       //     return result;
+       // }
+       // result = createRefundTradeRule.md5Validate(refundOrderRequestDTO);
+       // if (!result.isSuccess()) {
+       //     return result;
+       // }
         result = createRefundTradeRule.bpIdValidate(refundOrderRequestDTO.getBpId());
         if (!result.isSuccess()) {
             return result;

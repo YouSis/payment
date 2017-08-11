@@ -35,5 +35,4 @@ public class PayWeChatPayNotifyMapperTest {
         weChatPayNotifyMapper.insert(weChatNotifyInfoPO);
 
     }
-
 }
