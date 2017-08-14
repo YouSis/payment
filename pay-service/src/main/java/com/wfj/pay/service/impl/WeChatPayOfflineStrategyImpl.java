@@ -1,9 +1,13 @@
 package com.wfj.pay.service.impl;
 
+import com.alibaba.fastjson.JSON;
+import com.wfj.ea.common.ErrorLevel;
 import com.wfj.pay.cache.PayCacheHandle;
+import com.wfj.pay.constant.ErrorCodeEnum;
 import com.wfj.pay.constant.PayLogConstant;
 import com.wfj.pay.constant.PayTradeStatus;
 import com.wfj.pay.constant.PayTypeEnum;
+import com.wfj.pay.dto.BleException;
 import com.wfj.pay.dto.OrderResponseDTO;
 import com.wfj.pay.dto.PayTradeDTO;
 import com.wfj.pay.dto.RefundOrderResponseDTO;
@@ -19,6 +23,7 @@ import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.service.IWeChatPayService;
 import com.wfj.pay.utils.DistributedLock;
+import com.wfj.pay.utils.ExceptionUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -85,6 +90,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.WECHAT_ERROR.getErrorCode(),"调用微信支付失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用微信支付失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求微信支付失败，请重试");
             return responseDTO;
@@ -112,6 +118,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.WECHAT_ERROR.getErrorCode(),"调用微信查询失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用微信查询订单失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求微信查询失败，请重试");
             return responseDTO;
@@ -143,6 +150,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.WECHAT_ERROR.getErrorCode(),"调用微信关闭失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用微信关闭订单失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求微信撤销失败，请重试");
             return responseDTO;
@@ -172,6 +180,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.WECHAT_ERROR.getErrorCode(),"调用微信退款失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用微信退款接口失败:" + e.toString(), e);
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求微信退款失败，请重试");
             return responseDTO;
@@ -197,6 +206,7 @@ public class WeChatPayOfflineStrategyImpl implements IPayStrategyService {
         } catch (Exception e) {
             //调用微信失败
             //此处应该抛出异常给监控平台
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.WECHAT_ERROR.getErrorCode(),"调用微信退款查询失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用微信退款查询接口失败:" + e.toString(), e);
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求微信退款查询失败，请重试");
             return responseDTO;

@@ -8,6 +8,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.math.BigDecimal;
+import java.util.HashMap;
+
 import static org.junit.Assert.*;
 
 /**
@@ -34,5 +37,16 @@ public class PayWeChatPayNotifyMapperTest {
         weChatNotifyInfoPO.setTotal_fee("123");
         weChatPayNotifyMapper.insert(weChatNotifyInfoPO);
 
+    }
+
+    @Test
+    public void test(){
+        HashMap<String, String> data = new HashMap<>();
+        data.put("body", "订单号："+"123");
+        data.put("out_trade_no", "201708192391");
+        data.put("total_fee", "123.2");
+        data.put("spbill_create_ip", "9.,9,9,");
+        data.put("auth_code", "2017873842874823");
+        System.out.println(data.toString());
     }
 }
