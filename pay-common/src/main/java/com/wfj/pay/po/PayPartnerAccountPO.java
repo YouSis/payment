@@ -3,8 +3,8 @@ package com.wfj.pay.po;
 import java.sql.Timestamp;
 
 /**
- * 渠道签约账户的信息表
- * ALIPAY、TENPAY、NETPAY、单独对接银行信息
+ * 渠道签约账户的信息表 ALIPAY、TENPAY、NETPAY、单独对接银行信息
+ * 
  * @author admin
  * @date 2015-12-30
  */
@@ -58,9 +58,17 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	 * 支付渠道类型：ALIPAY/TENPAY/NETPAY等
 	 */
 	private String payType;
-	
+
 	private String appid;
-	
+	/**
+	 * 应用门店号
+	 */
+	private String storeId;
+	/**
+	 * 门店名称（目前主要用于区分支付宝超市和百货）
+	 */
+	private String storeName;
+
 	/**
 	 * 支付宝公钥
 	 */
@@ -71,11 +79,9 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	private String privateKey;
 	// Constructors
 	/**
-	 * 支付类型(中文)
-	 * 多表关联查询
+	 * 支付类型(中文) 多表关联查询
 	 */
 	private String payTypeCode;
-
 
 	public String getPayTypeCode() {
 		return payTypeCode;
@@ -85,11 +91,9 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 		this.payTypeCode = payTypeCode;
 	}
 
-	public PayPartnerAccountPO(Long id, String branchId, String partner,
-			String encryptKey, String sellerEmail, Timestamp createDate,
-			Double feeCostRate, String payMediumCode,
-			String payMediumCodeCredit, String keyPath, String payType,
-			String appid, String publicKey, String privateKey,
+	public PayPartnerAccountPO(Long id, String branchId, String partner, String encryptKey, String sellerEmail,
+			Timestamp createDate, Double feeCostRate, String payMediumCode, String payMediumCodeCredit, String keyPath,
+			String payType, String appid, String storeId, String storeName, String publicKey, String privateKey,
 			String payTypeCode) {
 		super();
 		this.id = id;
@@ -104,6 +108,8 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 		this.keyPath = keyPath;
 		this.payType = payType;
 		this.appid = appid;
+		this.storeId = storeId;
+		this.storeName = storeName;
 		this.publicKey = publicKey;
 		this.privateKey = privateKey;
 		this.payTypeCode = payTypeCode;
@@ -111,15 +117,12 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "PayPartnerAccountPO [id=" + id + ", branchId=" + branchId
-				+ ", partner=" + partner + ", encryptKey=" + encryptKey
-				+ ", sellerEmail=" + sellerEmail + ", createDate=" + createDate
-				+ ", feeCostRate=" + feeCostRate + ", payMediumCode="
-				+ payMediumCode + ", payMediumCodeCredit="
-				+ payMediumCodeCredit + ", keyPath=" + keyPath + ", payType="
-				+ payType + ", appid=" + appid + ", publicKey=" + publicKey
-				+ ", privateKey=" + privateKey + ", payTypeCode=" + payTypeCode
-				+ "]";
+		return "PayPartnerAccountPO [id=" + id + ", branchId=" + branchId + ", partner=" + partner + ", encryptKey="
+				+ encryptKey + ", sellerEmail=" + sellerEmail + ", createDate=" + createDate + ", feeCostRate="
+				+ feeCostRate + ", payMediumCode=" + payMediumCode + ", payMediumCodeCredit=" + payMediumCodeCredit
+				+ ", keyPath=" + keyPath + ", payType=" + payType + ", appid=" + appid + ", storeId=" + storeId
+				+ ", storeName=" + storeName + ", publicKey=" + publicKey + ", privateKey=" + privateKey
+				+ ", payTypeCode=" + payTypeCode + "]";
 	}
 
 	/** default constructor */
@@ -131,7 +134,6 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 		this.id = id;
 	}
 
-
 	/**
 	 * 取得主键ID.
 	 * 
@@ -140,7 +142,6 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	public Long getId() {
 		return this.id;
 	}
-
 
 	/**
 	 * 设置主键ID.
@@ -151,10 +152,11 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	public void setId(Long id) {
 		this.id = id;
 	}
-	
+
 	/**
 	 * 取得商户开户分行号
-	 * @return  branchId 开户分行号
+	 * 
+	 * @return branchId 开户分行号
 	 */
 	public String getBranchId() {
 		return branchId;
@@ -162,7 +164,9 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 
 	/**
 	 * 设置开户分行号
-	 * @param branchId 开户分行号
+	 * 
+	 * @param branchId
+	 *            开户分行号
 	 */
 	public void setBranchId(String branchId) {
 		this.branchId = branchId;
@@ -308,6 +312,20 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 		this.privateKey = privateKey;
 	}
 
+	public String getStoreId() {
+		return storeId;
+	}
 
+	public void setStoreId(String storeId) {
+		this.storeId = storeId;
+	}
+
+	public String getStoreName() {
+		return storeName;
+	}
+
+	public void setStoreName(String storeName) {
+		this.storeName = storeName;
+	}
 
 }
