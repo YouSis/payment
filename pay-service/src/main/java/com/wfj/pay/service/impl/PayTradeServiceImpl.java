@@ -1,12 +1,10 @@
 package com.wfj.pay.service.impl;
 
 import com.alibaba.fastjson.JSON;
+import com.wfj.ea.common.ErrorLevel;
 import com.wfj.pay.annotation.DataSource;
 import com.wfj.pay.cache.PayCacheHandle;
-import com.wfj.pay.constant.PayLogConstant;
-import com.wfj.pay.constant.PayTradeStatus;
-import com.wfj.pay.constant.PayTypeEnum;
-import com.wfj.pay.constant.TradeStatusConstant;
+import com.wfj.pay.constant.*;
 import com.wfj.pay.dto.*;
 import com.wfj.pay.mapper.PayChannelMapper;
 import com.wfj.pay.mapper.PaySequencesMapper;
@@ -276,6 +274,7 @@ public class PayTradeServiceImpl implements IPayTradeService {
             logger.error("发送订单数据到MQ失败："+e.toString(),e);
             logger.error("发送订单数据到MQ失败的报文数据："+ JSON.toJSONString(dataDTO));
             //此处应该抛异常到异常框架，人工查看失败原因
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.SEND_PAY_DATA_ERROR.getErrorCode(),"发送订单数据到MQ失败"+e.toString()+"  "+JSON.toJSONString(dataDTO), ErrorLevel.ERROR.getCode()));
         }
     }
 

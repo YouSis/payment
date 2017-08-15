@@ -14,9 +14,122 @@
         <result property="mobileNotifyUrl" column="mobile_notify_url" />
         <result property="mobileRedirectUrl" column="mobile_redirect_url" />
     </resultMap>
+    
+    <insert id="insert" parameterType="PayBusinessPO">
+		insert
+		into
+		pay_business(id,bp_key,bp_name,description,last_date,create_date,status,notify_url,redirect_url,mobile_notify_url,mobile_redirect_url)
+		values(s_pay_business.nextval,#{bpKey},#{bpName},#{description},#{lastDate},#{createDate},#{status},#{notifyUrl,jdbcType=VARCHAR},#{redirectUrl,jdbcType=VARCHAR},#{mobileNotifyUrl,jdbcType=VARCHAR},#{mobileRedirectUrl,jdbcType=VARCHAR})
+	</insert>
 
     <select id="selectByBpId" parameterType="long" resultMap="payBusinessPO">
         SELECT * FROM  pay_business WHERE id=#{id}
     </select>
 
+	<select id="selectAll" parameterType="map" resultMap="payBusinessPO">
+		SELECT * FROM pay_business
+		<where>
+			<if test="bpName !=null">
+				AND bp_name like '%'||#{bpName}||'%'
+			</if>
+			<if test="status !=null">
+				AND status = #{status}
+			</if>
+			<if test="id !=null">
+				AND id = #{id}
+			</if>
+		</where>
+		order by last_date desc
+	</select>
+	
+	<update id="update" parameterType="PayBusinessPO">
+		update pay_business set
+		bp_name=#{bpName},
+		last_date=#{lastDate},
+		description=#{description},
+		notify_url=#{notifyUrl,jdbcType=VARCHAR},
+		redirect_url=#{redirectUrl,jdbcType=VARCHAR},
+		mobile_notify_url=#{mobileNotifyUrl,jdbcType=VARCHAR},
+		mobile_redirect_url=#{mobileRedirectUrl,jdbcType=VARCHAR},
+		status=#{status}
+		where
+		id=#{id}
+	</update>
+	
+	<insert id="addPayChannel">
+		insert
+		into
+		pay_channel(id,bp_id,dic_code,pay_type,client_type,pay_service,pay_partner)
+		values(s_pay_channel.nextval,#{bp_id},#{dic_code},#{pay_type,jdbcType=VARCHAR},#{client_type},#{pay_service},#{pay_partner,jdbcType=INTEGER})
+	</insert>
+	
+	<delete id="deletePayChannel" parameterType="int">
+		delete from pay_channel
+		<where>
+			id=#{id}
+		</where>
+	</delete>
+	
+	<select id="selectBankByFlag"  resultType="com.wfj.pay.dto.SelectBankDTO">
+		select * from pay_dictionary
+		<where>
+			<if test="third_bank_flag!=null">
+				third_bank_flag=#{third_bank_flag}
+			</if>
+			<if test="third_channel_flag!=null">
+				and third_channel_flag = #{third_channel_flag}
+			</if>
+			<if test="online_bank_flag!=null">
+				and online_bank_flag = #{online_bank_flag}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectPayChannel" resultType="com.wfj.pay.dto.BankChannelDTO">
+		select c.*,d.value payTypeCode,p.value bankCode 
+		from pay_channel c 
+		left join pay_dictionary d on c.pay_type = d.name 
+		left join pay_dictionary p on c.dic_code = p.name 
+		<where>
+			<if test="bpId!=null">
+				c.bp_id = #{bpId}
+			</if>
+			<if test="payService!=null">
+				and c.pay_service = #{payService}
+			</if>
+		</where>
+	</select>
+	
+	<select id="selectPartnerAccount"  resultType="com.wfj.pay.dto.PartnerAccountDTO">
+		SELECT A.* FROM 
+        (SELECT PA.*, D.VALUE FROM PAY_PARTNER_ACCOUNT PA, PAY_DICTIONARY D 
+        WHERE PA.PAY_TYPE=D.NAME AND (D.THIRD_CHANNEL_FLAG='1' OR D.ONLINE_BANK_FLAG='1')) A 
+		<where>
+			<if test="payType!=null">
+				pay_type=#{payType}
+			</if>
+		</where>
+	</select>
+	
+	<update id="updatePayChannel" parameterType="PayBusinessPO">
+		update pay_channel set
+		dic_code=#{dic_code},
+		pay_type=#{pay_type,jdbcType=VARCHAR},
+		client_type=#{client_type},
+		pay_partner=#{pay_partner,jdbcType=INTEGER}
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	
+	<select id="checkPayChannel" parameterType="map" resultType="com.wfj.pay.dto.BankChannelDTO">
+		SELECT * FROM pay_channel
+		<where>
+			pay_service=#{payService} 
+			and dic_code=#{dicCode}
+			and client_type=#{clientType}
+			and bp_id=#{bpId}
+		</where>
+		ORDER BY ID
+	</select>
 </mapper>

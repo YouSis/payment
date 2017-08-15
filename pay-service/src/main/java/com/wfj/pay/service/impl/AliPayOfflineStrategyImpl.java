@@ -7,10 +7,13 @@ import com.alipay.api.AlipayClient;
 import com.alipay.api.DefaultAlipayClient;
 import com.alipay.api.request.*;
 import com.alipay.api.response.*;
+import com.wfj.ea.common.ErrorLevel;
 import com.wfj.pay.cache.PayCacheHandle;
+import com.wfj.pay.constant.ErrorCodeEnum;
 import com.wfj.pay.constant.PayTradeStatus;
 import com.wfj.pay.constant.PayTypeEnum;
 import com.wfj.pay.constant.SceneEnum;
+import com.wfj.pay.dto.BleException;
 import com.wfj.pay.dto.OrderResponseDTO;
 import com.wfj.pay.dto.PayTradeDTO;
 import com.wfj.pay.dto.RefundOrderResponseDTO;
@@ -26,7 +29,9 @@ import com.wfj.pay.service.IPayRefundTradeService;
 import com.wfj.pay.service.IPayStrategyService;
 import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.utils.DistributedLock;
+import com.wfj.pay.utils.ExceptionUtil;
 import com.wfj.pay.utils.JsonUtil;
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,7 +95,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             response = alipayClient.execute(request);
             logger.info("支付返回结果：" + JSON.toJSONString(response));
         } catch (AlipayApiException e) {
-            e.printStackTrace();
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.ALIPAY_ERROR.getErrorCode(),"调用支付宝支付失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用支付宝支付失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求支付宝支付失败，请重试");
             return responseDTO;
@@ -123,6 +128,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             response = alipayClient.execute(request);
             logger.info("--->查询返回的参数：" + response.getBody());
         } catch (AlipayApiException e) {
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.ALIPAY_ERROR.getErrorCode(),"调用支付宝查询失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用支付宝查询订单失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求支付宝查询失败，请重试");
             return responseDTO;
@@ -159,7 +165,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             response = alipayClient.execute(request);
             logger.info("调用支付宝关闭返回结果:" + JSON.toJSONString(response));
         } catch (AlipayApiException e) {
-            e.printStackTrace();
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.ALIPAY_ERROR.getErrorCode(),"调用支付宝关闭失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用支付宝关闭失败:" + e.toString(), e);
             responseDTO = new OrderResponseDTO("1", "false", "请求支付宝撤销失败，请重试");
             return responseDTO;
@@ -196,7 +202,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             response = alipayClient.execute(request);
             logger.info("调用退款返回结果：" + JSON.toJSONString(response));
         } catch (AlipayApiException e) {
-            e.printStackTrace();
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.ALIPAY_ERROR.getErrorCode(),"调用支付宝退款失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用支付宝退款失败:" + e.toString(), e);
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款失败，请重试");
             return responseDTO;
@@ -229,6 +235,7 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
             response = alipayClient.execute(request);
             logger.info("调用退款查询返回结果：" + JSON.toJSONString(response));
         } catch (AlipayApiException e) {
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.ALIPAY_ERROR.getErrorCode(),"调用支付宝退款查询失败："+e.toString()+"  "+data.toString(), ErrorLevel.WARNING.getCode()));
             logger.error("调用支付宝退款查询接口失败:" + e.toString(), e);
             responseDTO = new RefundOrderResponseDTO("1", "false", "请求支付宝退款查询失败，请重试");
             return responseDTO;
@@ -414,14 +421,18 @@ public class AliPayOfflineStrategyImpl implements IPayStrategyService {
         paramMap.put("scene", SceneEnum.BarCode.getType());
         paramMap.put("auth_code", payTradeDTO.getAuthCode());
         paramMap.put("total_amount", String.valueOf(payTradeDTO.getTotalFee()));
-        // paramMap.put("subject", "2609-" + order.getGoodsName());
-        paramMap.put("subject", payTradeDTO.getGoodsName());
+        paramMap.put("subject", "订单号："+payTradeDTO.getGoodsName());
         paramMap.put("body", payTradeDTO.getContent());
         paramMap.put("operator_id", payTradeDTO.getCashier());
-        paramMap.put("store_id", payTradeDTO.getMerCode());
-        paramMap.put("terminal_id", payTradeDTO.getBpOrderId().substring(0, 3));
+        PayPartnerAccountPO payPartnerAccout = PayCacheHandle.getPayPartnerAccout(payTradeDTO.getPayPartner());
+        //针对开通支付宝口碑门店的特殊处理逻辑
+        if(StringUtils.isNotEmpty(payPartnerAccout.getStoreId())){
+            paramMap.put("alipay_store_id", payPartnerAccout.getStoreId());
+        }else{
+            paramMap.put("store_id", payTradeDTO.getMerCode());
+        }
+        paramMap.put("terminal_id", payTradeDTO.getBpOrderId().substring(0, 4));
         paramMap.put("timeout_express", "90m");
-
         return paramMap;
     }
 

@@ -1,5 +1,8 @@
 package com.wfj.pay.mapper;
 
+import com.wfj.pay.dto.BankChannelDTO;
+import com.wfj.pay.dto.PartnerAccountDTO;
+import com.wfj.pay.dto.SelectBankDTO;
 import com.wfj.pay.po.PayBusinessPO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -22,4 +25,18 @@ public interface PayBusinessMapper {
     List<PayBusinessPO> selectAll(Map<String, Object> para);
 
     void update(PayBusinessPO payBusinessPO);
+
+	void addPayChannel(BankChannelDTO bankChannelDTO);
+
+	void deletePayChannel(Long id);
+
+	List<SelectBankDTO> selectBankByFlag(SelectBankDTO bank);
+
+	List<BankChannelDTO> selectPayChannel(@Param("bpId")Integer bpId, @Param("payService")Integer payService);
+
+	List<PartnerAccountDTO> selectPartnerAccount(@Param("payType")String payType);
+
+	void updatePayChannel(BankChannelDTO bankChannel);
+
+	List<BankChannelDTO> checkPayChannel(Map<String, Object> para);
 }

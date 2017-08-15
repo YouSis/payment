@@ -58,17 +58,18 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	 * 支付渠道类型：ALIPAY/TENPAY/NETPAY等
 	 */
 	private String payType;
-
+	/**
+	 * 微信为微信公众号的id，支付宝为线下支付应用的appid
+	 */
 	private String appid;
 	/**
-	 * 应用门店号
+	 * 应用门店号：
 	 */
 	private String storeId;
 	/**
 	 * 门店名称（目前主要用于区分支付宝超市和百货）
 	 */
 	private String storeName;
-
 	/**
 	 * 支付宝公钥
 	 */
@@ -117,12 +118,26 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		return "PayPartnerAccountPO [id=" + id + ", branchId=" + branchId + ", partner=" + partner + ", encryptKey="
-				+ encryptKey + ", sellerEmail=" + sellerEmail + ", createDate=" + createDate + ", feeCostRate="
-				+ feeCostRate + ", payMediumCode=" + payMediumCode + ", payMediumCodeCredit=" + payMediumCodeCredit
-				+ ", keyPath=" + keyPath + ", payType=" + payType + ", appid=" + appid + ", storeId=" + storeId
-				+ ", storeName=" + storeName + ", publicKey=" + publicKey + ", privateKey=" + privateKey
-				+ ", payTypeCode=" + payTypeCode + "]";
+		final StringBuffer sb = new StringBuffer("PayPartnerAccountPO{");
+		sb.append("id=").append(id);
+		sb.append(", branchId='").append(branchId).append('\'');
+		sb.append(", partner='").append(partner).append('\'');
+		sb.append(", encryptKey='").append(encryptKey).append('\'');
+		sb.append(", sellerEmail='").append(sellerEmail).append('\'');
+		sb.append(", createDate=").append(createDate);
+		sb.append(", feeCostRate=").append(feeCostRate);
+		sb.append(", payMediumCode='").append(payMediumCode).append('\'');
+		sb.append(", payMediumCodeCredit='").append(payMediumCodeCredit).append('\'');
+		sb.append(", keyPath='").append(keyPath).append('\'');
+		sb.append(", payType='").append(payType).append('\'');
+		sb.append(", appid='").append(appid).append('\'');
+		sb.append(", storeId='").append(storeId).append('\'');
+		sb.append(", storeName='").append(storeName).append('\'');
+		sb.append(", publicKey='").append(publicKey).append('\'');
+		sb.append(", privateKey='").append(privateKey).append('\'');
+		sb.append(", payTypeCode='").append(payTypeCode).append('\'');
+		sb.append('}');
+		return sb.toString();
 	}
 
 	/** default constructor */
@@ -327,5 +342,4 @@ public class PayPartnerAccountPO implements java.io.Serializable {
 	public void setStoreName(String storeName) {
 		this.storeName = storeName;
 	}
-
 }

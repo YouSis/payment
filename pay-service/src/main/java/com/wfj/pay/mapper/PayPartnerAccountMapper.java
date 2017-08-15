@@ -1,5 +1,6 @@
 package com.wfj.pay.mapper;
 
+import com.wfj.pay.po.PayChannelFeeRatePO;
 import com.wfj.pay.po.PayPartnerAccountPO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -18,4 +19,7 @@ public interface PayPartnerAccountMapper {
     void update(PayPartnerAccountPO payPartnerAccountPO);
 
     PayPartnerAccountPO selectById(@Param("id") Long id);
+
+	List<PayPartnerAccountPO> findAllPage(Map<String, Object> para);
+
 }

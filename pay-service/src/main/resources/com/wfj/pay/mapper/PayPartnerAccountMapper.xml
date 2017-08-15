@@ -23,64 +23,65 @@
     </resultMap>
 
     <insert id="insert" parameterType="PayPartnerAccountPO">
-		insert
-		into
-		PAY_PARTNER_ACCOUNT(
-		ID,
-		PARTNER,		
-		ENCRYPT_KEY,
-		KEY_PATH,		
-		SELLER_EMAIL,		
-		CREATE_DATE,
-		PAY_MEDIUM_CODE,
-		PAY_TYPE,
-		BRANCH_ID,
-		PAY_MEDIUM_CODE_CREDIT,
-		APPID,
-		STORE_ID,
-		STORE_NAME,
-		PUBLIC_KEY,
-		PRIVATE_KEY
-		)
-		values(
-		S_PAY_PARTNER_ACCOUNT.NEXTVAL,
-		#{partner, jdbcType=VARCHAR},		
-		#{encryptKey, jdbcType=VARCHAR},
-		#{keyPath, jdbcType=VARCHAR},		
-		#{sellerEmail, jdbcType=VARCHAR},		
-		#{createDate, jdbcType=DATE},
-		#{payMediumCode,jdbcType=VARCHAR},
-		#{payType,jdbcType=VARCHAR},	
-		#{branchId,jdbcType=VARCHAR},	
-		#{payMediumCodeCredit,jdbcType=VARCHAR},	
-		#{appid,jdbcType=VARCHAR},
-		#{storeId,jdbcType=VARCHAR},
-		#{storeName,jdbcType=VARCHAR},
-		#{publicKey,jdbcType=VARCHAR},
-		#{privateKey,jdbcType=VARCHAR}		
-		)
-	</insert>
+        INSERT
+        INTO
+            PAY_PARTNER_ACCOUNT (
+                ID,
+                PARTNER,
+                ENCRYPT_KEY,
+                KEY_PATH,
+                SELLER_EMAIL,
+                CREATE_DATE,
+                PAY_MEDIUM_CODE,
+                PAY_TYPE,
+                BRANCH_ID,
+                PAY_MEDIUM_CODE_CREDIT,
+                APPID,
+                PUBLIC_KEY,
+                PRIVATE_KEY,
+                STORE_ID,
+                STORE_NAME
+            )
+        VALUES (
+            S_PAY_PARTNER_ACCOUNT.NEXTVAL,
+            #{partner, jdbcType=VARCHAR},
+            #{encryptKey, jdbcType=VARCHAR},
+            #{keyPath, jdbcType=VARCHAR},
+            #{sellerEmail, jdbcType=VARCHAR},
+            #{createDate, jdbcType=DATE},
+            #{payMediumCode,jdbcType=VARCHAR},
+            #{payType,jdbcType=VARCHAR},
+            #{branchId,jdbcType=VARCHAR},
+            #{payMediumCodeCredit,jdbcType=VARCHAR},
+            #{appid,jdbcType=VARCHAR},
+            #{publicKey,jdbcType=VARCHAR},
+            #{privateKey,jdbcType=VARCHAR},
+            #{storeId,jdbcType=VARCHAR},
+            #{storeName,jdbcType=VARCHAR}
+        )
+    </insert>
 
 
     <update id="update" parameterType="PayPartnerAccountPO">
-		update PAY_PARTNER_ACCOUNT set
-		PARTNER=#{partner,jdbcType=VARCHAR},
-		ENCRYPT_KEY=#{encryptKey,jdbcType=VARCHAR},
-		KEY_PATH=#{keyPath,jdbcType=VARCHAR},
-		SELLER_EMAIL=#{sellerEmail,jdbcType=VARCHAR},
-		CREATE_DATE=#{createDate,jdbcType=DATE},
-		PAY_MEDIUM_CODE=#{payMediumCode,jdbcType=VARCHAR},
-		PAY_TYPE=#{payType,jdbcType=VARCHAR},
-		BRANCH_ID=#{branchId,jdbcType=VARCHAR},
-		PAY_MEDIUM_CODE_CREDIT=#{payMediumCodeCredit,jdbcType=VARCHAR},
-		APPID=#{appid,jdbcType=VARCHAR},
-		STORE_ID=#{storeId,jdbcType=VARCHAR},
-		STORE_NAME=#{storeName,jdbcType=VARCHAR},
-		PUBLIC_KEY=#{publicKey,jdbcType=VARCHAR},
-		PRIVATE_KEY=#{privateKey,jdbcType=VARCHAR}	
-		where
-		ID=#{id}
-	</update>
+        UPDATE PAY_PARTNER_ACCOUNT
+        SET
+            PARTNER                = #{partner,jdbcType=VARCHAR},
+            ENCRYPT_KEY            = #{encryptKey,jdbcType=VARCHAR},
+            KEY_PATH               = #{keyPath,jdbcType=VARCHAR},
+            SELLER_EMAIL           = #{sellerEmail,jdbcType=VARCHAR},
+            CREATE_DATE            = #{createDate,jdbcType=DATE},
+            PAY_MEDIUM_CODE        = #{payMediumCode,jdbcType=VARCHAR},
+            PAY_TYPE               = #{payType,jdbcType=VARCHAR},
+            BRANCH_ID              = #{branchId,jdbcType=VARCHAR},
+            PAY_MEDIUM_CODE_CREDIT = #{payMediumCodeCredit,jdbcType=VARCHAR},
+            APPID                  = #{appid,jdbcType=VARCHAR},
+            PUBLIC_KEY             = #{publicKey,jdbcType=VARCHAR},
+            PRIVATE_KEY            = #{privateKey,jdbcType=VARCHAR},
+            STORE_ID               = #{storeId,jdbcType=VARCHAR},
+            STORE_NAME             = #{storeName,jdbcType=VARCHAR}
+        WHERE
+            ID = #{id}
+    </update>
 
     <select id="selectById" parameterType="long" resultMap="payPartnerAccount">
         SELECT *

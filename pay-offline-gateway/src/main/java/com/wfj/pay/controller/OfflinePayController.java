@@ -1,12 +1,16 @@
 package com.wfj.pay.controller;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.alibaba.dubbo.rpc.cluster.loadbalance.ConsistentHashLoadBalance;
 import com.alibaba.fastjson.JSON;
+import com.wfj.ea.common.ErrorLevel;
+import com.wfj.pay.constant.ErrorCodeEnum;
 import com.wfj.pay.constant.PayOrderTerminalEnum;
 import com.wfj.pay.constant.PayServiceEnum;
 import com.wfj.pay.constant.PayTypeEnum;
 import com.wfj.pay.dto.*;
 import com.wfj.pay.dubbo.IOfflinePayDubbo;
+import com.wfj.pay.utils.ExceptionUtil;
 import com.wfj.pay.utils.WebUtil;
 import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
@@ -51,6 +55,7 @@ public class OfflinePayController {
         try {
             orderResponseDTO = offlinePayDubbo.createOrder(orderRequestDTO);
         } catch (Exception e) {
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.PAY_ERROR.getErrorCode(),"订单支付失败："+e.toString()+"  "+JSON.toJSONString(orderRequestDTO), ErrorLevel.ERROR.getCode()));
             //调用dubbo失败，可能是超时，也可能是服务方出错了
             logger.error(e.toString(), e);
             orderResponseDTO = new OrderResponseDTO("1", "false", "系统错误,请重试");
@@ -79,6 +84,7 @@ public class OfflinePayController {
             orderResponseDTO = offlinePayDubbo.queryOrder(orderQueryRequestDTO);
         } catch (Exception e) {
             //调用dubbo失败，可能是超时，也可能是服务方出错了
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.PAY_QUERY_ERROR.getErrorCode(),"订单查询失败："+e.toString()+"  "+JSON.toJSONString(orderQueryRequestDTO), ErrorLevel.ERROR.getCode()));
             logger.error(e.toString(), e);
             orderResponseDTO = new OrderResponseDTO("1", "false", "系统错误,请重试");
         }
@@ -107,6 +113,7 @@ public class OfflinePayController {
             orderResponseDTO = offlinePayDubbo.closeOrder(orderCloseRequestDTO);
         } catch (Exception e) {
             //调用dubbo失败，可能是超时，也可能是服务方出错了
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.PAY_CLOSE_ERROR.getErrorCode(),"订单关闭失败："+e.toString()+"  "+JSON.toJSONString(orderCloseRequestDTO), ErrorLevel.ERROR.getCode()));
             logger.error(e.toString(), e);
             orderResponseDTO = new OrderResponseDTO("1", "false", "系统错误,请重试");
         }
@@ -135,6 +142,7 @@ public class OfflinePayController {
             refundOrderResponseDTO = offlinePayDubbo.createRefundOrder(refundOrderRequestDTO);
         } catch (Exception e) {
             //调用dubbo失败，可能是超时，也可能是服务方出错了
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.REFUND_ERROR.getErrorCode(),"退款失败："+e.toString()+"  "+JSON.toJSONString(refundOrderRequestDTO), ErrorLevel.ERROR.getCode()));
             logger.error(e.toString(), e);
             refundOrderResponseDTO = new RefundOrderResponseDTO("1", "false", "系统错误,请重试");
         }
@@ -161,6 +169,7 @@ public class OfflinePayController {
             refundOrderResponseDTO = offlinePayDubbo.queryRefundOrder(refundOrderQueryRequestDTO);
         } catch (Exception e) {
             //调用dubbo失败，可能是超时，也可能是服务方出错了
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.REFUND_QUERY_ERROR.getErrorCode(),"退款查询失败："+e.toString()+"  "+JSON.toJSONString(refundOrderQueryRequestDTO), ErrorLevel.ERROR.getCode()));
             logger.error(e.toString(), e);
             refundOrderResponseDTO = new RefundOrderResponseDTO("1", "false", "系统错误,请重试");
         }

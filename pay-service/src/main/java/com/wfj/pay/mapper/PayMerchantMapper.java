@@ -16,11 +16,11 @@ public interface PayMerchantMapper {
 
     int insert(PayMerchantPO payMerchantPO);
 
-    int delete(int id);
-
     PayMerchantPO selectOne(Map<String, Object> para);
 
-    List<PayMerchantPO> selectPage(@Param("id") Long id, @Param("name") String name);
+    List<PayMerchantPO> selectPage(@Param("name") String name);
 
     int update(PayMerchantPO payMerchantPO);
+    
+    List<PayMerchantPO> selectMerCode();
 }

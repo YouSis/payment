@@ -1,12 +1,14 @@
 package com.wfj.pay.cache;
 
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
+
 import com.wfj.pay.po.PayBusinessPO;
+import com.wfj.pay.po.PayChannelFeeRatePO;
 import com.wfj.pay.po.PayPartnerAccountPO;
 import com.wfj.pay.service.IPayBusinessService;
 import com.wfj.pay.service.IPayPartnerAccountServive;
 import com.wfj.pay.spring.SpringContextAware;
-import org.springframework.data.redis.core.RedisTemplate;
-import org.springframework.data.redis.core.StringRedisTemplate;
 
 /**
  * Created by wjg on 2017/6/23.
@@ -50,6 +52,17 @@ public class PayCacheHandle {
         }
         return businessPO;
     }
+    
+    /**
+     * 往缓存中添加business
+     * @param businessPO
+     */
+    public static void setBusinessPO(PayBusinessPO businessPO) {
+    	RedisTemplate<String,PayBusinessPO> redisTemplate = getRedisTemplate();
+    	if (businessPO != null) {
+    		redisTemplate.opsForValue().set(String.format(PAY_BUSINESS_CACHE_KEY, businessPO.getId()), businessPO);
+    	}
+    }
 
     /**
      * 获取缓存中的PayPartnerAccountPO，如果不存在则查询数据库，然后放入缓存
@@ -68,4 +81,16 @@ public class PayCacheHandle {
         }
         return partnerAccountPO;
     }
+    
+    /**
+     * 往缓存中新增payPartnerAccout
+     * @param partnerAccountPO
+     */
+    public static void setPayPartnerAccout(PayPartnerAccountPO partnerAccountPO) {
+    	RedisTemplate<String,PayPartnerAccountPO> redisTemplate = getRedisTemplate();
+    	if (partnerAccountPO != null) {
+    		redisTemplate.opsForValue().set(String.format(PAY_PARTNER_ACCOUNT_CACHE_KEY, partnerAccountPO.getId()), partnerAccountPO);
+    	}
+    }
+
 }
