@@ -1,7 +1,11 @@
 package com.wfj.pay.task;
 
 import com.alibaba.dubbo.config.annotation.Reference;
+import com.wfj.ea.common.ErrorLevel;
+import com.wfj.pay.constant.ErrorCodeEnum;
+import com.wfj.pay.dto.BleException;
 import com.wfj.pay.dubbo.IPayScheduleDubbo;
+import com.wfj.pay.utils.ExceptionUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -25,6 +29,7 @@ public class PayTradeCloseTask {
         }catch (Exception e){
             logger.error("订单超时关闭的调度失败"+e.toString(),e);
             //此处可能是dubbo提供者出异常了,应抛异常到异常监控
+            ExceptionUtil.sendException(new BleException(ErrorCodeEnum.SCHEDULE_CLOSE_ERROR.getErrorCode(),"超时订单关闭任务失败："+e.toString(), ErrorLevel.ERROR.getCode()));
         }
         logger.info("--->任务结束,停止调用关闭超时订单的服务...");
     }

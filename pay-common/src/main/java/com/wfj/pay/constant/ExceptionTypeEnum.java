@@ -9,7 +9,8 @@ public enum ExceptionTypeEnum {
     WECHATPAY_TYPE("130", "微信支付"),
     ALIPAY_TYPE("140", "支付宝支付"),
     SEND_PAY_DATA_TYPE("150","发送订单数据"),
-    SEND_REFUND_DATA_TYPE("160","发送退款单数据");
+    SEND_REFUND_DATA_TYPE("160","发送退款单数据"),
+    SCHEDULE_TYPE("170","调度任务");
 
 
     private String code;
