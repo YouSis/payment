@@ -15,7 +15,8 @@ public enum ErrorCodeEnum {
     WECHAT_ERROR("00130001","调用微信失败"),
     ALIPAY_ERROR("00140001","调用支付宝失败"),
     SEND_PAY_DATA_ERROR("00150001","发送订单数据到MQ失败"),
-    SEND_REFUND_DATA_ERROR("00160001","发送退款数据到MQ失败");
+    SEND_REFUND_DATA_ERROR("00160001","发送退款数据到MQ失败"),
+    SCHEDULE_CLOSE_ERROR("00170001","关闭订单调度失败");
     private String errorCode;
     private String errorCodeDes;
 
