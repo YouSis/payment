@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayDictionaryMapper">
+	<resultMap type="com.wfj.pay.po.PayDictionaryPO" id="payDictionaryPO">
+		<id property="id" column="ID" />
+		<result property="name" column="NAME" />
+		<result property="value" column="VALUE" />
+		<result property="thirdBankFlag" column="THIRD_BANK_FLAG"/>
+		<result property="thirdChannelFlag" column="THIRD_CHANNEL_FLAG"/>
+		<result property="onlineBankFlag" column="ONLINE_BANK_FLAG"/>
+	</resultMap>
+	<!-- 查询渠道支付类型 -->
+	<select id="selectPayDictionary" resultMap="payDictionaryPO">
+	   select * from pay_dictionary d 
+	   where d.third_channel_flag='1' or d.online_bank_flag  = '1'
+	</select>
+</mapper>

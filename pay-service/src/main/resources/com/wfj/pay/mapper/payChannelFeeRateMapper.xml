@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayChannelFeeRateMapper">
+	<resultMap type="com.wfj.pay.po.PayChannelFeeRatePO" id="payChannelFeeRatePO">
+		<id property="id" column="id" />
+		<result property="payPartner" column="pay_partner" />
+		<result property="feeCostRate" column="fee_cost_rate" />
+		<result property="rateType" column="rate_type" />
+		<result property="rateTypeName" column="rate_type_name"/>
+		<result property="payType" column="pay_type"/>
+	</resultMap>
+	
+	<!-- 根据条件查询渠道费率list -->
+	<select id="selectChannelFeeRateList" resultMap="payChannelFeeRatePO">
+		select 
+			fr.id id,
+			fr.pay_partner pay_partner,
+			fr.fee_cost_rate fee_cost_rate,
+			fr.rate_type rate_type,
+			frt.rate_type_name rate_type_name,
+			frt.pay_type pay_type
+		from 
+			pay_fee_rate fr join pay_fee_rate_type frt on fr.rate_type=frt.rate_type
+		<trim prefix="WHERE" prefixOverrides="and|or">
+			<if test="id != null">
+				fr.id=#{id}
+			</if>
+			<if test="payPartner != null">
+				and	fr.pay_partner=#{payPartner}
+			</if>
+			<if test="feeCostRate != null">
+				and fr.fee_cost_rate=#{feeCostRate}
+			</if>
+			<if test="rateType != null and rateType!=''">
+				and fr.rate_type=#{rateType}
+			</if>
+			<if test="payType != null and payType!=''">
+				and frt.pay_type=#{payType}
+			</if>
+		</trim>
+		order by fr.id DESC
+	</select>
+	
+	<!-- 添加渠道费率 -->
+	<insert id="addChannelFeeRate" parameterType="PayChannelFeeRatePO">
+		insert into
+			pay_fee_rate
+				(id,pay_partner,fee_cost_rate,rate_type)
+			values
+				(s_pay_fee_rate.nextval,#{payPartner},#{feeCostRate},#{rateType})
+	</insert>
+	
+	<!-- 更新支付渠道费率 -->
+	<update id="updateChannelFeeRate" parameterType="PayChannelFeeRatePO">
+		update pay_fee_rate
+			set
+				rate_type=#{rateType},
+				fee_cost_rate=#{feeCostRate}
+		where 
+			id=#{id}
+	</update>
+</mapper>

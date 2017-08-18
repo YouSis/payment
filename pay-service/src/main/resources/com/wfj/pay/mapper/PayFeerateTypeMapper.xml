@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayFeerateTypeMapper">
+	<resultMap type="com.wfj.pay.po.PayFeeRateTypePO" id="payFeeRateTypePO">
+		<result property="payType" column="PAY_TYPE"/>
+		<result property="rateType" column="RATE_TYPE"/>
+		<result property="rateTypeName" column="RATE_TYPE_NAME"/>
+	</resultMap>
+	
+	<!-- 查询支付渠道类型 -->
+	<select id="selectFeeRateType" resultMap="payFeeRateTypePO">
+		select * from pay_fee_rate_type
+		<where>
+			<if test="payType != null and payType!=''">
+				pay_type=#{payType}
+			</if>
+		</where>
+	</select>
+</mapper>

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.wfj.pay.mapper.PayMerchantMapper">
+	<resultMap type="com.wfj.pay.po.PayMerchantPO" id="merchant">
+		<id property="id" column="id"/>
+		<result property="name" column="name"/>
+		<result property="merCode" column="mer_code"/>
+		<result property="feeCostRate" column="fee_cost_rate"/>
+		<result property="merchantType" column="merchant_type"/>
+		<result property="isOpenYZShop" column="is_open_yzshop"/>
+		<result property="yzShopUrl" column="yzshop_url"/>
+		<result property="memberUrl" column="member_url"/>
+	</resultMap>
+	
+	<select id="selectPage" resultMap="merchant">
+		select * from 
+		pay_merchant
+		<where>
+			<if test="name != null">
+				AND name like '%'||#{name}||'%'
+			</if>
+		</where>
+		ORDER BY ID ASC
+	</select>
+	
+	<insert id="insert" parameterType="PayMerchantPO">
+		insert
+		into
+		pay_merchant(id,name,mer_code,fee_cost_rate,MERCHANT_TYPE,IS_OPEN_YZSHOP,YZSHOP_URL,MEMBER_URL)
+		values(s_pay_merchant.nextval,#{name,jdbcType=VARCHAR},#{merCode,jdbcType=VARCHAR},#{feeCostRate,jdbcType=NUMERIC},#{merchantType,jdbcType=NUMERIC}
+		,#{isOpenYZShop,jdbcType=VARCHAR}
+		,#{yzShopUrl,jdbcType=VARCHAR}
+		,#{memberUrl,jdbcType=VARCHAR})
+	</insert>
+	
+	<select id="selectOne" parameterType="map" resultMap="merchant">
+		SELECT * FROM PAY_MERCHANT
+		<where>
+			<if test="id!=null">
+				id=#{id}
+			</if>
+			<if test="name!=null">
+				AND NAME=#{name}
+			</if>
+			<if test="merCode!=null">
+				AND MER_CODE=#{merCode}
+			</if>
+		</where>
+	</select>
+	
+	<update id="update" parameterType="PayMerchantPO">
+		update pay_merchant set
+		name=#{name,jdbcType=VARCHAR},
+		mer_code=#{merCode,jdbcType=VARCHAR},
+		fee_cost_rate=#{feeCostRate,jdbcType=NUMERIC},
+		MERCHANT_TYPE=#{merchantType,jdbcType=NUMERIC},
+		IS_OPEN_YZSHOP=#{isOpenYZShop,jdbcType=VARCHAR},
+		YZSHOP_URL=#{yzShopUrl,jdbcType=VARCHAR},
+		MEMBER_URL=#{memberUrl,jdbcType=VARCHAR}
+		<where>
+			id=#{id}
+		</where>
+	</update>
+	
+	<select id="selectMerCode"  resultMap="merchant">
+		select * from pay_merchant m where m.merchant_type='1'
+	</select>
+</mapper>
