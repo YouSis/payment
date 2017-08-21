@@ -44,7 +44,6 @@ public class OfflinePayDubboImpl implements IOfflinePayDubbo {
 
     @Override
     public OrderResponseDTO createOrder(OrderRequestDTO orderRequestDTO) {
-        int a = 10/0;
         OrderResponseDTO responseDTO = new OrderResponseDTO();
         logger.info("--->接到线下支付的报文:" + JSON.toJSONString(orderRequestDTO));
         long createOrderStart = System.currentTimeMillis();
