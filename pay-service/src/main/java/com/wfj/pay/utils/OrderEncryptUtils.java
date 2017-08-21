@@ -77,7 +77,7 @@ public class OrderEncryptUtils {
      * @param orderRequestDTO
      * @return
      */
-    private static Map<String,String> getCreateTradeParamsMap(OrderRequestDTO orderRequestDTO){
+    public static Map<String,String> getCreateTradeParamsMap(OrderRequestDTO orderRequestDTO){
         Map<String, Object> map = ObjectUtil.beanToMap(orderRequestDTO);
         Map<String, String> collectMap = Arrays.stream(CREATE_ORDER_MD5_PARAMS).
                 map(s -> new KeyValue(s, StringUtil.getString(map.get(s))))
