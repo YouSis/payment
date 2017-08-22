@@ -45,9 +45,9 @@ public class MyBatisConfig implements EnvironmentAware {
         dataSource.setUrl(env.getProperty("spring.master.datasource.url"));
         dataSource.setUsername(env.getProperty("spring.master.datasource.username"));
         dataSource.setPassword(env.getProperty("spring.master.datasource.password"));
-        dataSource.setInitialSize(2);
-        dataSource.setMaxActive(20);
-        dataSource.setMinIdle(2);
+        dataSource.setInitialSize(20);
+        dataSource.setMaxActive(200);
+        dataSource.setMinIdle(20);
         dataSource.setMaxWait(60000);
         dataSource.setValidationQuery("SELECT 1 FROM DUAL");
         dataSource.setTimeBetweenEvictionRunsMillis(60000);

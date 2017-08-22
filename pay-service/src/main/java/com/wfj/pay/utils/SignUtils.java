@@ -12,9 +12,9 @@ import java.util.Map;
 public class SignUtils {
     public static void main(String[] args) {
 
-        //String json = createOrder();
+        String json = createOrder();
         //String json = closeOrder();
-        String json = createRefundOrder();
+        //String json = createRefundOrder();
 
         System.out.println(json);
     }
@@ -22,17 +22,17 @@ public class SignUtils {
     private static String createOrder(){
         OrderRequestDTO requestDTO = new OrderRequestDTO();
         requestDTO.setBpId("100003");
-        requestDTO.setAntiPhishingKey("c24088375e8a4e20a3e0e7fbf10d191b");
-        requestDTO.setBpOrderId("809711231231");
+        requestDTO.setAntiPhishingKey("634233c5c70341109b124125b29b3d60");
+        requestDTO.setBpOrderId("809711231262");
         requestDTO.setGoodsName("8097122001");
         requestDTO.setContent("8097122001");
         requestDTO.setTotalFee(0.01);
         requestDTO.setInitOrderTerminal("04");
-        requestDTO.setPayType("ALIPAY_OFFLINE");
+        requestDTO.setPayType("WECHATPAY_OFFLINE");
         requestDTO.setPayService("2");
         requestDTO.setMerCode("21011");
         requestDTO.setCashier("123456654");
-        requestDTO.setAuthCode("289380188718469421");
+        requestDTO.setAuthCode("130416849005577684");
 
         Map<String, String> createTradeParamsMap = OrderEncryptUtils.getCreateTradeParamsMap(requestDTO);
         String sign = OrderEncryptUtils.getSign(createTradeParamsMap,"5e86d16a9df70b6861bd9698789ef41a");
