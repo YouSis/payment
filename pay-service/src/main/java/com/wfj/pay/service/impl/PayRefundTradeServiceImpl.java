@@ -178,9 +178,13 @@ public class PayRefundTradeServiceImpl implements IPayRefundTradeService {
     @Override
     public void sendPayRefundTradeToMQ(String refundTradeNo) {
         PayRefundTradePO payRefundTradePO = findPayRefundTradePO(refundTradeNo);
+        PayTradePO tradePO = payTradeService.findByOrderTradeNo(payRefundTradePO.getOrderTradeNo());
         PayRefundTradeEsPO refundTradeEsPO = new PayRefundTradeEsPO();
         BeanUtils.copyProperties(payRefundTradePO,refundTradeEsPO);
         refundTradeEsPO.setCreateDateTime(payRefundTradePO.getCreateDate());
+        refundTradeEsPO.setMerCode(tradePO.getMerCode());
+        refundTradeEsPO.setCreateOrderTime(tradePO.getCreateDateFormat());
+        refundTradeEsPO.setPayType(tradePO.getPayType());
         List<PayRefundLogPO> refundLogPOS = payLogService.findByRefundTradeNo(refundTradeNo);
         List<PayRefundLogEsPO> refundLogEsPOS = refundLogPOS.stream().map(refundLogPO -> {
             PayRefundLogEsPO refundLogEsPO = new PayRefundLogEsPO();

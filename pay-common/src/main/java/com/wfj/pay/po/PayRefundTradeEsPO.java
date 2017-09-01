@@ -81,6 +81,22 @@ public class PayRefundTradeEsPO implements Serializable{
 	 */
 	@Field(type = FieldType.Double,index = FieldIndex.not_analyzed)
 	private double couponFee;
+	/**
+	 * 支付方式
+	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
+	private String payType;
+	/**
+	 * 门店号码
+	 */
+	@Field(type = FieldType.String,index = FieldIndex.not_analyzed)
+	private String merCode;
+	/**
+	 *正向订单的创建时间
+	 */
+	@Field(type = FieldType.Date,index = FieldIndex.not_analyzed)
+	private Timestamp createOrderTime;
+
 
 	public Long getId() {
 		return id;
@@ -176,6 +192,30 @@ public class PayRefundTradeEsPO implements Serializable{
 
 	public void setCouponFee(double couponFee) {
 		this.couponFee = couponFee;
+	}
+
+	public String getPayType() {
+		return payType;
+	}
+
+	public void setPayType(String payType) {
+		this.payType = payType;
+	}
+
+	public String getMerCode() {
+		return merCode;
+	}
+
+	public void setMerCode(String merCode) {
+		this.merCode = merCode;
+	}
+
+	public Timestamp getCreateOrderTime() {
+		return createOrderTime;
+	}
+
+	public void setCreateOrderTime(Timestamp createOrderTime) {
+		this.createOrderTime = createOrderTime;
 	}
 }
 

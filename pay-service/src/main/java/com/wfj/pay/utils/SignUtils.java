@@ -12,18 +12,18 @@ import java.util.Map;
 public class SignUtils {
     public static void main(String[] args) {
 
-        String json = createOrder();
+        //String json = createOrder();
         //String json = closeOrder();
-        //String json = createRefundOrder();
+        String json = createRefundOrder();
 
         System.out.println(json);
     }
 
     private static String createOrder(){
         OrderRequestDTO requestDTO = new OrderRequestDTO();
-        requestDTO.setBpId("100003");
-        requestDTO.setAntiPhishingKey("634233c5c70341109b124125b29b3d60");
-        requestDTO.setBpOrderId("809711231262");
+        requestDTO.setBpId("10045");
+        requestDTO.setAntiPhishingKey("8cb0feaca9324462b346cc8bfb80938a");
+        requestDTO.setBpOrderId("809711231263");
         requestDTO.setGoodsName("8097122001");
         requestDTO.setContent("8097122001");
         requestDTO.setTotalFee(0.01);
@@ -32,10 +32,10 @@ public class SignUtils {
         requestDTO.setPayService("2");
         requestDTO.setMerCode("21011");
         requestDTO.setCashier("123456654");
-        requestDTO.setAuthCode("130416849005577684");
+        requestDTO.setAuthCode("134879232524280784");
 
         Map<String, String> createTradeParamsMap = OrderEncryptUtils.getCreateTradeParamsMap(requestDTO);
-        String sign = OrderEncryptUtils.getSign(createTradeParamsMap,"5e86d16a9df70b6861bd9698789ef41a");
+        String sign = OrderEncryptUtils.getSign(createTradeParamsMap,"7adfc5eb0899b601a4e56821bf3a49e0");
         requestDTO.setSign(sign);
         return JSON.toJSONString(requestDTO);
     }
@@ -54,14 +54,14 @@ public class SignUtils {
 
     private static String createRefundOrder(){
         Map<String,String> param = new HashMap<>();
-        param.put("antiPhishingKey","ef16ebb590c54e5f8e146edfc9129983");
-        param.put("bpId","100003");
-        param.put("bpRefundOrderId","123781117");
-        param.put("orderTradeNo","2017080000000000939231");
-        param.put("payType","ALIPAY_OFFLINE");
+        param.put("antiPhishingKey","4cd26077576c4b0e8c3092ec05ba4647");
+        param.put("bpId","10045");
+        param.put("bpRefundOrderId","123781117111");
+        param.put("orderTradeNo","2017090000000000005617");
+        param.put("payType","WECHATPAY_OFFLINE");
         param.put("refundFee","0.01");
 
-        String sign = OrderEncryptUtils.getSign(param,"5e86d16a9df70b6861bd9698789ef41a");
+        String sign = OrderEncryptUtils.getSign(param,"7adfc5eb0899b601a4e56821bf3a49e0");
         param.put("sign",sign);
 
         return JSON.toJSONString(param);
