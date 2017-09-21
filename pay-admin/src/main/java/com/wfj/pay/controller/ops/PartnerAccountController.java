@@ -250,4 +250,19 @@ public class PartnerAccountController {
 		}
 		return response;
 	}
+	
+	@ResponseBody
+	@RequestMapping("/selectPayChannel")
+	public ResponseDTO<List<PayDictionaryDTO>> selectChannelPay() {
+		ResponseDTO<List<PayDictionaryDTO>> response = new ResponseDTO<List<PayDictionaryDTO>>();
+		try {
+			List<PayDictionaryDTO> list = opsOperationDubbo.selectPayDIctionaryAll();
+			response.setData(list);
+			response.setResult(ResponseDTO.RESULT_SUCCESS);
+		} catch (Exception e) {
+			LOGGER.error(e.toString(), e);
+			response.setResult(ResponseDTO.RESULT_FAILURE);
+		}
+		return response;
+	}
 }
