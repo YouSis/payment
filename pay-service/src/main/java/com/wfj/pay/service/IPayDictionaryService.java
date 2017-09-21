@@ -18,4 +18,16 @@ public interface IPayDictionaryService {
 	 */
 	List<PayDictionaryPO> selectPayDictionary();
 
+	/**
+	 * 根据name查询
+	 * @param name
+	 */
+	PayDictionaryPO selectOneByName(String name);
+
+	/**
+	 * 查询所有
+	 * @return
+	 */
+	List<PayDictionaryPO> selectPayDictionaryAll();
+
 }

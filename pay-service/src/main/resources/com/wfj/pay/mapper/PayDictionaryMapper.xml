@@ -14,4 +14,13 @@
 	   select * from pay_dictionary d 
 	   where d.third_channel_flag='1' or d.online_bank_flag  = '1'
 	</select>
+	
+	<select id="selectOneByName" resultMap="payDictionaryPO">
+		select * from pay_dictionary
+		where NAME=#{name}
+	</select>
+	
+	<select id="selectPayDictionaryAll" resultMap="payDictionaryPO">
+		select * from pay_dictionary
+	</select>
 </mapper>

@@ -6,6 +6,8 @@ import java.util.Map;
 import com.wfj.pay.dto.BankChannelDTO;
 import com.wfj.pay.dto.BusinessDTO;
 import com.wfj.pay.dto.MerchantRequestDTO;
+import com.wfj.pay.dto.OrderQueryReqDTO;
+import com.wfj.pay.dto.OrderQueryResDTO;
 import com.wfj.pay.dto.PaginationDTO;
 import com.wfj.pay.dto.PartnerAccountDTO;
 import com.wfj.pay.dto.PayChannelFeeRateDTO;
@@ -14,7 +16,13 @@ import com.wfj.pay.dto.PayFeeRateTypeDTO;
 import com.wfj.pay.dto.PayPartnerAccountDTO;
 import com.wfj.pay.dto.SelectBankDTO;
 import com.wfj.pay.dto.SelectOptionDTO;
+import com.wfj.pay.po.PayBusinessPO;
+import com.wfj.pay.po.PayDictionaryPO;
+import com.wfj.pay.po.PayLogPO;
 import com.wfj.pay.po.PayMerchantPO;
+import com.wfj.pay.po.PayRefundLogPO;
+import com.wfj.pay.po.PayRefundTradePO;
+import com.wfj.pay.po.PayTradePO;
 
 /**
  * 对应ops所有操作的dubbo接口
@@ -198,5 +206,57 @@ public interface IOPSOperationDubbo {
 	 * @return
 	 */
 	List<PayDictionaryDTO> selectPayDictionary();
+
+	/**
+	 * 查询所有门店相关信息
+	 */
+	List<PayMerchantPO> findMerchantAll();
+
+	/**
+	 * 根据bpid查询business
+	 * @param bpId
+	 * @return
+	 */
+	PayBusinessPO findBusinessByBpid(Long bpId);
+
+	/**
+	 * 查找PayDictionary
+	 * @param payBank
+	 */
+	PayDictionaryPO selectPayDictionaryByPayBank(String payBank);
+
+	/**
+	 * 分页查询未支付成功订单
+	 * @param orderDTO
+	 * @return
+	 */
+	PaginationDTO<OrderQueryResDTO> findAllOrderCompensate(OrderQueryReqDTO orderDTO);
+
+	/**
+	 * 订单补偿查询订单状态
+	 * @param orderDTO
+	 */
+	void singLeTradeQuery(OrderQueryReqDTO orderDTO);
+
+	/**
+	 * 查询Merchant
+	 * @param merCodes
+	 * @return
+	 */
+	List<PayMerchantPO> findMerchantByMerCode(List<String> merCodes);
+
+	/**
+	 * 查询所有DIctionary
+	 * @return
+	 */
+	List<PayDictionaryDTO> selectPayDIctionaryAll();
+
+	List<PayTradePO> tradeToES();
+
+	List<PayLogPO> getLongByOrderTradeNo(String orderTradeNo);
+
+	List<PayRefundTradePO> getRefundTradeByOrderTradeNo(String orderTradeNo);
+
+	List<PayRefundLogPO> getRefundLogByRefundOrderTradeNo(String refundTradeNo);
 
 }

@@ -4,7 +4,6 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.core.StringRedisTemplate;
 
 import com.wfj.pay.po.PayBusinessPO;
-import com.wfj.pay.po.PayChannelFeeRatePO;
 import com.wfj.pay.po.PayPartnerAccountPO;
 import com.wfj.pay.service.IPayBusinessService;
 import com.wfj.pay.service.IPayPartnerAccountServive;

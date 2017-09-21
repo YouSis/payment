@@ -1,6 +1,6 @@
 package com.wfj.pay.mapper;
 
-import com.wfj.pay.dto.PayTradeDTO;
+import com.wfj.pay.dto.OrderQueryReqDTO;
 import com.wfj.pay.po.PayTradePO;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -31,4 +31,10 @@ public interface PayTradeMapper {
     void updateOrderStatus(@Param("orderTradeNo") String orderTrade,@Param("status") Long status);
 
     List<PayTradePO> selectByTimeStamp(@Param("beginTimeStamp") long beginTimeStamp, @Param("endTimeStamp") long endTimeStamp);
+
+	List<PayTradePO> selectAllOrderCompensate(OrderQueryReqDTO orderDTO);
+
+	List<PayTradePO> selectAllOrderByStatus(OrderQueryReqDTO orderDTO);
+
+	List<PayTradePO> tradeToES();
 }

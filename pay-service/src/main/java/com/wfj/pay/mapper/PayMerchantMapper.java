@@ -23,4 +23,6 @@ public interface PayMerchantMapper {
     int update(PayMerchantPO payMerchantPO);
     
     List<PayMerchantPO> selectMerCode();
+
+	List<PayMerchantPO> selectMerCodeByMerCode(@Param("merCodes") List<String> merCodes);
 }

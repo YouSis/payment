@@ -63,6 +63,20 @@
 	</update>
 	
 	<select id="selectMerCode"  resultMap="merchant">
-		select * from pay_merchant m where m.merchant_type='1'
+		select * from pay_merchant m where m.merchant_type='1' order by m.mer_code asc
+	</select>
+	
+	<select id="selectMerCodeByMerCode" parameterType="list" resultMap="merchant">
+		select * from pay_merchant m 
+		<where>
+		m.merchant_type='1'
+		<if test="merCodes != null and merCodes.size != 0">
+			and
+			<foreach collection="merCodes" item="merCode" separator=" or ">
+					mer_code=#{merCode}
+			</foreach>
+		</if> 
+		</where>
+		order by m.mer_code asc
 	</select>
 </mapper>

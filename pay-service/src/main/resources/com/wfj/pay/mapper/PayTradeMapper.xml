@@ -172,4 +172,96 @@
                   AND T.STATUS = 1)
         WHERE ROWNUM &lt; 101
     </select>
+    
+    <!-- 查询订单补偿 带分页-->
+	<select id="selectAllOrderCompensate" parameterType="com.wfj.pay.dto.OrderQueryReqDTO"
+		resultType="payTradePO">
+		SELECT *
+		FROM  PAY_TRADE 
+		<where>
+			<if test="startTime != null and startTime !=''	">
+				AND CREATE_DATE&gt;=#{startTime}
+			</if>
+			<if test="endTime != null and endTime !=''	">
+				AND CREATE_DATE&lt;=#{endTime}
+			</if>
+			<if test="bpId != null and bpId !='' and bpId !=0	">
+				AND BP_ID =#{bpId}
+			</if>
+			<if test=" orderTradeNo != null and orderTradeNo != ''	" >
+				AND ORDER_TRADE_NO=#{orderTradeNo}
+			</if>	
+			<if test="payType != null and payType != ''	">
+				AND PAY_TYPE=#{payType}
+			</if>
+			<if test="bpOrderId != null and bpOrderId != ''	">
+				AND BP_ORDER_ID=#{bpOrderId}
+			</if>
+			<if test="bpIds !=null and bpIds.size!=0">
+				AND 
+				<foreach collection="bpIds" item="id" separator=" or ">
+					bp_id=#{id}
+				</foreach>
+			</if>
+			<if test="initOrderTerminal != null &amp;&amp; initOrderTerminal != ''	">
+				AND INIT_ORDER_TERMINAL = #{initOrderTerminal}
+			</if>
+			AND STATUS=1
+			AND PAY_BANK IS NOT NULL
+			AND PAY_SERVICE IS NOT NULL
+			AND PAY_TYPE IS NOT NULL 
+		</where>
+		<if test="sortParam != null">
+			ORDER BY ${sortParam}
+		</if>
+		<if test="sortParam == null &amp;&amp; srotType == null">
+			ORDER BY CREATE_DATE DESC
+		</if>
+	</select>
+	
+	<select id="selectAllOrderByStatus" parameterType="com.wfj.pay.dto.OrderQueryReqDTO"
+		resultType="payTradePO">
+		SELECT * FROM  PAY_TRADE 
+		<where>
+			<if test="startTime != null and startTime !=''	">
+				AND CREATE_DATE>=#{startTime}
+			</if>
+			<if test="endTime != null and endTime !=''	">
+				AND CREATE_DATE&lt;=#{endTime}
+			</if>
+			<if test="bpId != null and bpId !='' and bpId !=0	">
+				AND BP_ID=#{bpId}
+			</if>
+			<if test=" orderTradeNo != null and orderTradeNo != ''	" >
+				AND ORDER_TRADE_NO=#{orderTradeNo}
+			</if>	
+			<if test="payType != null and payType != ''	">
+				AND PAY_TYPE=#{payType}
+			</if>
+			<if test="bpOrderId != null and bpOrderId != ''	">
+				AND BP_ORDER_ID=#{bpOrderId}
+			</if>
+			<if test="initOrderTerminal != null &amp;&amp; initOrderTerminal != ''	">
+				AND INIT_ORDER_TERMINAL = #{initOrderTerminal}
+			</if>
+			<if test="bpIds !=null and bpIds.size!=0">
+				AND 
+				<foreach collection="bpIds" item="id" separator=" or ">
+					bp_id=#{id}
+				</foreach>
+			</if>
+			AND STATUS=1
+			AND PAY_BANK IS NOT NULL
+			AND PAY_SERVICE IS NOT NULL
+			AND PAY_TYPE IS NOT NULL 
+		</where>
+	</select>
+	
+	<select id="tradeToES" resultMap="payTradePO">
+		SELECT * FROM  PAY_TRADE
+		<where>
+			status != 1
+		</where>
+		order by CREATE_DATE desc
+	</select>
 </mapper>

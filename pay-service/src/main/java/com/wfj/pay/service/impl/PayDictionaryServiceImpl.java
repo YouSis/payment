@@ -12,11 +12,12 @@ import com.wfj.pay.po.PayDictionaryPO;
 import com.wfj.pay.service.IPayDictionaryService;
 
 @Service
-public class PayDictionaryServiceImpl implements IPayDictionaryService{
+public class PayDictionaryServiceImpl implements IPayDictionaryService {
 	private Logger LOGGER = LoggerFactory.getLogger(PayDictionaryServiceImpl.class);
 
 	@Autowired
 	private PayDictionaryMapper dictionaryMapper;
+
 	/**
 	 * 查询支付渠道字典
 	 */
@@ -24,6 +25,16 @@ public class PayDictionaryServiceImpl implements IPayDictionaryService{
 	public List<PayDictionaryPO> selectPayDictionary() {
 		List<PayDictionaryPO> poList = dictionaryMapper.selectPayDictionary();
 		return poList;
+	}
+
+	@Override
+	public PayDictionaryPO selectOneByName(String name) {
+		return dictionaryMapper.selectOneByName(name);
+	}
+
+	@Override
+	public List<PayDictionaryPO> selectPayDictionaryAll() {
+		return dictionaryMapper.selectPayDictionaryAll();
 	}
 
 }

@@ -16,6 +16,8 @@ import com.wfj.pay.cache.PayCacheHandle;
 import com.wfj.pay.dto.BankChannelDTO;
 import com.wfj.pay.dto.BusinessDTO;
 import com.wfj.pay.dto.MerchantRequestDTO;
+import com.wfj.pay.dto.OrderQueryReqDTO;
+import com.wfj.pay.dto.OrderQueryResDTO;
 import com.wfj.pay.dto.PaginationDTO;
 import com.wfj.pay.dto.PartnerAccountDTO;
 import com.wfj.pay.dto.PayChannelFeeRateDTO;
@@ -24,15 +26,24 @@ import com.wfj.pay.dto.PayFeeRateTypeDTO;
 import com.wfj.pay.dto.PayPartnerAccountDTO;
 import com.wfj.pay.dto.SelectBankDTO;
 import com.wfj.pay.dto.SelectOptionDTO;
+import com.wfj.pay.mapper.PayRefundLogMapper;
 import com.wfj.pay.po.PayBusinessPO;
 import com.wfj.pay.po.PayChannelFeeRatePO;
 import com.wfj.pay.po.PayDictionaryPO;
+import com.wfj.pay.po.PayLogPO;
 import com.wfj.pay.po.PayMerchantPO;
 import com.wfj.pay.po.PayPartnerAccountPO;
+import com.wfj.pay.po.PayRefundLogPO;
+import com.wfj.pay.po.PayRefundTradePO;
+import com.wfj.pay.po.PayTradePO;
 import com.wfj.pay.service.IPayBusinessService;
 import com.wfj.pay.service.IPayDictionaryService;
+import com.wfj.pay.service.IPayLogService;
 import com.wfj.pay.service.IPayMerchantService;
+import com.wfj.pay.service.IPayOrderService;
 import com.wfj.pay.service.IPayPartnerAccountServive;
+import com.wfj.pay.service.IPayRefundTradeService;
+import com.wfj.pay.service.IPayTradeService;
 import com.wfj.pay.service.UserRightsService;
 import com.wfj.pay.utils.ObjectUtil;
 
@@ -56,6 +67,16 @@ public class OPSOperationDubboImpl implements IOPSOperationDubbo {
 	private IPayPartnerAccountServive partnerAccountService;
 	@Autowired
 	private IPayDictionaryService dictionaryService;
+	@Autowired
+	private IPayOrderService payOrderService;
+	@Autowired
+	private IPayTradeService payTradeService;
+	@Autowired
+	private IPayLogService logService;
+	@Autowired
+	private IPayRefundTradeService refundTradeService;
+	@Autowired
+	private PayRefundLogMapper refundLogMapper;
 
 	/**
 	 * 分页查询商户信息
@@ -493,4 +514,102 @@ public class OPSOperationDubboImpl implements IOPSOperationDubbo {
 		});
 		return dtoList;
 	}
+
+	/**
+	 * 查询所有门店信息
+	 */
+	@Override
+	public List<PayMerchantPO> findMerchantAll() {
+		return merchantService.selectMerCode();
+	}
+	
+	@Override
+	public List<PayMerchantPO> findMerchantByMerCode(List<String> merCodes) {
+		return merchantService.selectMerCodeByMerCode(merCodes);
+	}
+
+	@Override
+	public PayBusinessPO findBusinessByBpid(Long bpId) {
+		return PayCacheHandle.getBusinessPOByBpId(bpId);
+	}
+
+	@Override
+	public PayDictionaryPO selectPayDictionaryByPayBank(String name) {
+		return dictionaryService.selectOneByName(name);
+	}
+
+	@Override
+	public PaginationDTO<OrderQueryResDTO> findAllOrderCompensate(OrderQueryReqDTO orderDTO) {
+		LOGGER.info("ops页面订单管理页面分页查询支付不成功的订单参数：" + JSON.toJSONString(orderDTO));
+		String msg = validatOrderCompensateParam(orderDTO);
+		if (!"".equals(msg)) {
+			LOGGER.info("ops页面订单管理页面分页查询支付不成功订单错误==" + msg);
+			return null;
+		}
+		return payOrderService.findAllOrderCompensate(orderDTO);
+	}
+	
+	/**
+	 * 补偿定单请求参数验证
+	 * @param orderDTO
+	 * @return
+	 */
+	public String validatOrderCompensateParam(OrderQueryReqDTO orderDTO){
+		String msg="";
+		if(orderDTO==null){
+			msg="请求DTO为空！";
+		}
+		if(orderDTO.getPageNo()==0||orderDTO.getPageNo()==0){
+			msg="分页参数错误,pageNo:" +orderDTO.getPageNo()+",pageSize:"+orderDTO.getPageSize();
+		}
+		if(orderDTO.getStartTime()==null||orderDTO.getEndTime()==null){
+			msg="查询时间错误,startTime:"+orderDTO.getStartTime()+",endTime :"+orderDTO.getEndTime();
+		}
+		if(orderDTO.getEndTime()-orderDTO.getStartTime()>1000*60*60*24*2||orderDTO.getEndTime()-orderDTO.getStartTime()<0){
+			msg="查询时间段错误,startTime:startTime:"+orderDTO.getStartTime()+",endTime:"+orderDTO.getEndTime();
+		}
+		return msg;
+	}
+
+	@Override
+	public void singLeTradeQuery(OrderQueryReqDTO orderDTO) {
+		LOGGER.info("ops页面订单管理页面补偿订单状态参数：" + JSON.toJSONString(orderDTO));
+		List<PayTradePO> tradeList = payOrderService.findAllOrderByStatus(orderDTO);
+		tradeList.forEach(trade -> {
+			payTradeService.query(trade);
+		});
+	}
+
+	public List<PayDictionaryDTO> selectPayDIctionaryAll() {
+		List<PayDictionaryPO> poList = dictionaryService.selectPayDictionaryAll();
+		List<PayDictionaryDTO> dtoList = new ArrayList<PayDictionaryDTO>();
+		poList.forEach(po -> {
+			PayDictionaryDTO dto = new PayDictionaryDTO();
+			BeanUtils.copyProperties(po, dto);
+			dtoList.add(dto);
+		});
+		return dtoList;
+	}
+
+	@Override
+	public List<PayTradePO> tradeToES() {
+		return payOrderService.tradeToES();
+	}
+
+	@Override
+	public List<PayLogPO> getLongByOrderTradeNo(String orderTradeNo) {
+		return logService.findByOrderTradeNo(orderTradeNo);
+	}
+
+	@Override
+	public List<PayRefundTradePO> getRefundTradeByOrderTradeNo(String orderTradeNo) {
+		return refundTradeService.findByOrderTradeNo(orderTradeNo);
+	}
+
+	@Override
+	public List<PayRefundLogPO> getRefundLogByRefundOrderTradeNo(String refundTradeNo) {
+		return refundLogMapper.selectByRefundTradeNo(refundTradeNo);
+	}
+
+	
 }

@@ -11,5 +11,9 @@ public interface PayDictionaryMapper {
 
 	List<PayDictionaryPO> selectPayDictionary();
 
+	PayDictionaryPO selectOneByName(String name);
+
+	List<PayDictionaryPO> selectPayDictionaryAll();
+
 	
 }

@@ -112,4 +112,11 @@ public class PayMerchantServiceImpl implements IPayMerchantService {
 		return merchantPOList;
 	}
 
+	@Override
+	@DataSource("slave")
+	public List<PayMerchantPO> selectMerCodeByMerCode(List<String> merCodes) {
+		List<PayMerchantPO> merchantPOList = merchantMapper.selectMerCodeByMerCode(merCodes);
+		return merchantPOList;
+	}
+
 }

@@ -47,4 +47,11 @@ public interface IPayMerchantService {
 	 */
 	List<PayMerchantPO> selectMerCode();
 
+	/**
+	 * 查询Merchant
+	 * @param merCodes
+	 * @return
+	 */
+	List<PayMerchantPO> selectMerCodeByMerCode(List<String> merCodes);
+
 }
