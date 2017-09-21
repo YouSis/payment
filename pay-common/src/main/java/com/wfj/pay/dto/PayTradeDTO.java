@@ -10,7 +10,6 @@ public class PayTradeDTO implements java.io.Serializable {
 
 	private static final long serialVersionUID = 1896463038299773254L;
 
-
 	// Fields
 
 	/**
@@ -257,7 +256,7 @@ public class PayTradeDTO implements java.io.Serializable {
 	 */
 	private String cashier;
 	/**
-	 * 扫货邦返回的交易号（实际是微信的流水号  退款时用到）
+	 * 扫货邦返回的交易号（实际是微信的流水号 退款时用到）
 	 */
 	private String transactionId;
 	/**
@@ -286,26 +285,18 @@ public class PayTradeDTO implements java.io.Serializable {
 		this.id = id;
 	}
 
-	/** full constructor */
-	public PayTradeDTO(Long id, String orderTradeNo, String payType,
-                       String payBank, String goodsName, String remark, Double totalFee,
-                       Long status, Long createDate, Timestamp createDateFormat,
-                       Long bpId, String bpOrderId, String showUrl, String content,
-                       String notifyUrl, String returnUrl, String account,
-                       String payAccount, Long payDate, Timestamp payDateFormat,
-                       String paySerialNumber, Long createDateMonth, Long createDateDay,
-                       Long createDateQuarter, Long payDateMonth, Long payDateDay,
-                       Long payDateQuarter, String unid, Timestamp notifyDate,
-                       String notifyNum, String notifyStatus, String bpParams,
-                       String notifyId, String orderUrl, String initOrderTerminal,
-                       String finalPayTerminal, String payLimit, String payIp,
-                       String payUnid, Long payPartner, Double channelFeeCost,
-                       Integer payService, Double needPayPrice, Double bargainIncome,
-                       Double realCardPrice, Double realIncome, String nickname,
-                       String payNickname, String payCurrency, String merCode,
-                       String goodsContent, String channelFeeCostDetail,
-                       Double platformFeeCost, String platformFeeCostDetail,
-                       String payMediumCode, String username, String cashier, double couponFee) {
+	public PayTradeDTO(Long id, String orderTradeNo, String payType, String payBank, String goodsName, String remark,
+			Double totalFee, Long status, Long createDate, Timestamp createDateFormat, Long bpId, String bpOrderId,
+			String showUrl, String content, String notifyUrl, String returnUrl, String account, String payAccount,
+			Long payDate, Timestamp payDateFormat, String paySerialNumber, Long createDateMonth, Long createDateDay,
+			Long createDateQuarter, Long payDateMonth, Long payDateDay, Long payDateQuarter, String unid,
+			Timestamp notifyDate, String notifyNum, String notifyStatus, String bpParams, String notifyId,
+			String orderUrl, String initOrderTerminal, String finalPayTerminal, String payLimit, String payIp,
+			String payUnid, Long payPartner, Double channelFeeCost, Integer payService, Double needPayPrice,
+			Double bargainIncome, Double realCardPrice, Double realIncome, String nickname, String payNickname,
+			String payCurrency, String merCode, String goodsContent, String channelFeeCostDetail,
+			Double platformFeeCost, String platformFeeCostDetail, String payMediumCode, String username, String cashier,
+			String transactionId, Long platformPayDate, Timestamp platformPayFormat, double couponFee, String authCode) {
 		super();
 		this.id = id;
 		this.orderTradeNo = orderTradeNo;
@@ -364,7 +355,11 @@ public class PayTradeDTO implements java.io.Serializable {
 		this.payMediumCode = payMediumCode;
 		this.username = username;
 		this.cashier = cashier;
+		this.transactionId = transactionId;
+		this.platformPayDate = platformPayDate;
+		this.platformPayFormat = platformPayFormat;
 		this.couponFee = couponFee;
+		this.authCode = authCode;
 	}
 
 	// Property accessors
@@ -376,7 +371,6 @@ public class PayTradeDTO implements java.io.Serializable {
 	public Long getId() {
 		return this.id;
 	}
-
 
 	/**
 	 * 设置订单ID.
@@ -1292,70 +1286,27 @@ public class PayTradeDTO implements java.io.Serializable {
 
 	@Override
 	public String toString() {
-		final StringBuffer sb = new StringBuffer("PayTradeDTO{");
-		sb.append("id=").append(id);
-		sb.append(", orderTradeNo='").append(orderTradeNo).append('\'');
-		sb.append(", payType='").append(payType).append('\'');
-		sb.append(", payBank='").append(payBank).append('\'');
-		sb.append(", goodsName='").append(goodsName).append('\'');
-		sb.append(", remark='").append(remark).append('\'');
-		sb.append(", totalFee=").append(totalFee);
-		sb.append(", status=").append(status);
-		sb.append(", createDate=").append(createDate);
-		sb.append(", createDateFormat=").append(createDateFormat);
-		sb.append(", bpId=").append(bpId);
-		sb.append(", bpOrderId='").append(bpOrderId).append('\'');
-		sb.append(", showUrl='").append(showUrl).append('\'');
-		sb.append(", content='").append(content).append('\'');
-		sb.append(", notifyUrl='").append(notifyUrl).append('\'');
-		sb.append(", returnUrl='").append(returnUrl).append('\'');
-		sb.append(", account='").append(account).append('\'');
-		sb.append(", payAccount='").append(payAccount).append('\'');
-		sb.append(", payDate=").append(payDate);
-		sb.append(", payDateFormat=").append(payDateFormat);
-		sb.append(", paySerialNumber='").append(paySerialNumber).append('\'');
-		sb.append(", createDateMonth=").append(createDateMonth);
-		sb.append(", createDateDay=").append(createDateDay);
-		sb.append(", createDateQuarter=").append(createDateQuarter);
-		sb.append(", payDateMonth=").append(payDateMonth);
-		sb.append(", payDateDay=").append(payDateDay);
-		sb.append(", payDateQuarter=").append(payDateQuarter);
-		sb.append(", unid='").append(unid).append('\'');
-		sb.append(", notifyDate=").append(notifyDate);
-		sb.append(", notifyNum='").append(notifyNum).append('\'');
-		sb.append(", notifyStatus='").append(notifyStatus).append('\'');
-		sb.append(", bpParams='").append(bpParams).append('\'');
-		sb.append(", notifyId='").append(notifyId).append('\'');
-		sb.append(", orderUrl='").append(orderUrl).append('\'');
-		sb.append(", initOrderTerminal='").append(initOrderTerminal).append('\'');
-		sb.append(", finalPayTerminal='").append(finalPayTerminal).append('\'');
-		sb.append(", payLimit='").append(payLimit).append('\'');
-		sb.append(", payIp='").append(payIp).append('\'');
-		sb.append(", payUnid='").append(payUnid).append('\'');
-		sb.append(", payPartner=").append(payPartner);
-		sb.append(", channelFeeCost=").append(channelFeeCost);
-		sb.append(", payService=").append(payService);
-		sb.append(", needPayPrice=").append(needPayPrice);
-		sb.append(", bargainIncome=").append(bargainIncome);
-		sb.append(", realCardPrice=").append(realCardPrice);
-		sb.append(", realIncome=").append(realIncome);
-		sb.append(", nickname='").append(nickname).append('\'');
-		sb.append(", payNickname='").append(payNickname).append('\'');
-		sb.append(", payCurrency='").append(payCurrency).append('\'');
-		sb.append(", merCode='").append(merCode).append('\'');
-		sb.append(", goodsContent='").append(goodsContent).append('\'');
-		sb.append(", channelFeeCostDetail='").append(channelFeeCostDetail).append('\'');
-		sb.append(", platformFeeCost=").append(platformFeeCost);
-		sb.append(", platformFeeCostDetail='").append(platformFeeCostDetail).append('\'');
-		sb.append(", payMediumCode='").append(payMediumCode).append('\'');
-		sb.append(", username='").append(username).append('\'');
-		sb.append(", cashier='").append(cashier).append('\'');
-		sb.append(", transactionId='").append(transactionId).append('\'');
-		sb.append(", platformPayDate=").append(platformPayDate);
-		sb.append(", platformPayFormat=").append(platformPayFormat);
-		sb.append(", couponFee=").append(couponFee);
-		sb.append(", authCode='").append(authCode).append('\'');
-		sb.append('}');
-		return sb.toString();
+		return "PayTradeDTO [id=" + id + ", orderTradeNo=" + orderTradeNo + ", payType=" + payType + ", payBank="
+				+ payBank + ", goodsName=" + goodsName + ", remark=" + remark + ", totalFee=" + totalFee + ", status="
+				+ status + ", createDate=" + createDate + ", createDateFormat=" + createDateFormat + ", bpId=" + bpId
+				+ ", bpOrderId=" + bpOrderId + ", showUrl=" + showUrl + ", content=" + content + ", notifyUrl="
+				+ notifyUrl + ", returnUrl=" + returnUrl + ", account=" + account + ", payAccount=" + payAccount
+				+ ", payDate=" + payDate + ", payDateFormat=" + payDateFormat + ", paySerialNumber=" + paySerialNumber
+				+ ", createDateMonth=" + createDateMonth + ", createDateDay=" + createDateDay + ", createDateQuarter="
+				+ createDateQuarter + ", payDateMonth=" + payDateMonth + ", payDateDay=" + payDateDay
+				+ ", payDateQuarter=" + payDateQuarter + ", unid=" + unid + ", notifyDate=" + notifyDate
+				+ ", notifyNum=" + notifyNum + ", notifyStatus=" + notifyStatus + ", bpParams=" + bpParams
+				+ ", notifyId=" + notifyId + ", orderUrl=" + orderUrl + ", initOrderTerminal=" + initOrderTerminal
+				+ ", finalPayTerminal=" + finalPayTerminal + ", payLimit=" + payLimit + ", payIp=" + payIp
+				+ ", payUnid=" + payUnid + ", payPartner=" + payPartner + ", channelFeeCost=" + channelFeeCost
+				+ ", payService=" + payService + ", needPayPrice=" + needPayPrice + ", bargainIncome=" + bargainIncome
+				+ ", realCardPrice=" + realCardPrice + ", realIncome=" + realIncome + ", nickname=" + nickname
+				+ ", payNickname=" + payNickname + ", payCurrency=" + payCurrency + ", merCode=" + merCode
+				+ ", goodsContent=" + goodsContent + ", channelFeeCostDetail=" + channelFeeCostDetail
+				+ ", platformFeeCost=" + platformFeeCost + ", platformFeeCostDetail=" + platformFeeCostDetail
+				+ ", payMediumCode=" + payMediumCode + ", username=" + username + ", cashier=" + cashier
+				+ ", transactionId=" + transactionId + ", platformPayDate=" + platformPayDate + ", platformPayFormat="
+				+ platformPayFormat + ", couponFee=" + couponFee + ", authCode=" + authCode + "]";
 	}
+
 }

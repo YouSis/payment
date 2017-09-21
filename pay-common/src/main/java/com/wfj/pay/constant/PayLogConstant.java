@@ -1,5 +1,8 @@
 package com.wfj.pay.constant;
 
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * Created by wjg on 2017/6/26.
  */
@@ -38,4 +41,12 @@ public class PayLogConstant {
      * 退款成功的日志模板
      */
     public static final String REFUND_STEP_SUCCESS="【<strong>wfjPay接收业务平台退款成功</strong>】<br>业务平台退款单号:<font color=\"blue\">#{bpRefundOrderId}</font>,wfj支付平台退款单流水号:<font color=\"blue\">#{refundTradeNo}</font>,退款单金额:<font color=\"blue\">#{refundFee}</font>元,退款单状态:<font color=\"blue\">#{status}</font>.";
+    
+  //日志状态
+    public static Map<String,String> statusMap = new HashMap<String,String>();
+	
+	static {
+		statusMap.put(SUCCESS_NAME, SUCCESS_CH_NAME);
+		statusMap.put(FAIL_NAME, FAIL_CN_NAME);
+	}
 }
